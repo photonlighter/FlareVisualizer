@@ -6,15 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+// adapter for trigger list, which is a RecyclerView
 public class TriggerListAdapter extends RecyclerView.Adapter<TriggerListAdapter.ViewHolder> {
     private String[] data;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView row;
 
-        public ViewHolder(TextView theText) {
-            super(theText);
-            row = theText;
+        public ViewHolder(View view) {
+            super(view);
+            row = view.findViewById(R.id.rowText);
         }
     }
 
@@ -26,7 +27,8 @@ public class TriggerListAdapter extends RecyclerView.Adapter<TriggerListAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.trigger_list_text_view, parent, false);
-        return new ViewHolder((TextView)view);
+
+        return new ViewHolder(view);
     }
 
     @Override

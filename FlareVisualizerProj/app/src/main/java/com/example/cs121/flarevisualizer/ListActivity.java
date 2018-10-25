@@ -20,26 +20,32 @@ public class ListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        // get intent from main activity
         Bundle extras = getIntent().getExtras();
 
+        // fetch extras from the intent
         if (extras != null){
+            // trigger data that will be displayed in list; should be pre-formatted
             data = extras.getStringArray("data");
+            // type of trigger data that is being displayed; used for header
             triggerType = extras.getString("triggerType");
         }
 
+        // set header according to the trigger type
         TextView header = findViewById(R.id.triggerListHeader);
         header.setText(getString(R.string.trigger_list, triggerType));
 
+        // sets up the list of triggers
         triggerList = findViewById(R.id.triggerList);
-
-        DividerItemDecoration divDecoration = new DividerItemDecoration(triggerList.getContext(),
-                layoutManager.getOrientation());
-        triggerList.addItemDecoration(divDecoration);
 
         triggerList.hasFixedSize();
 
         layoutManager = new LinearLayoutManager(this);
         triggerList.setLayoutManager(layoutManager);
+
+        DividerItemDecoration divDecoration = new DividerItemDecoration(triggerList.getContext(),
+                layoutManager.getOrientation());
+        triggerList.addItemDecoration(divDecoration);
 
         adapter = new TriggerListAdapter(data);
         triggerList.setAdapter(adapter);

@@ -13,6 +13,7 @@
         android:layout_centerHorizontal="true"
         android:textSize = "20sp"
         android:textStyle="bold"
+        android:layout_marginTop="7dp"
         android:text="@string/trigger_list" />
 
     <android.support.v7.widget.RecyclerView
