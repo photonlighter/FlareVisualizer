@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Flare Visualizer</string>
     <string name="trigger_list">%1$s Trigger List</string>
+    <string name="pain_rating">Pain Rating:</string>
+    <string name="new_info_submission">Submit New Info</string>
+    <string name="old_info_fetch">Fetch Old Info</string>
+    <string name="hour_text">o\' clock</string>
+    <string name="time_header">Time:</string>
+    <string name="date_slash">/</string>
+    <string name="date_header">Date:</string>
 </resources>
