@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -16,18 +17,31 @@ public class EditActivity extends AppCompatActivity {
     private String[] years = new String[21];
     private String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
     private String[] meridiem = {"A.M.", "P.M."};
+    private String[] painRating = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 
-    private Spinner monthSpinner = findViewById(R.id.monthSpinner);
-    private Spinner daySpinner = findViewById(R.id.daySpinner);
-    private Spinner yearSpinner = findViewById(R.id.yearSpinner);
-    private Spinner hourSpinner = findViewById(R.id.hourSpinner);
-    private Spinner meridiemSpinner = findViewById(R.id.meridiemSpinner);
-    private Spinner painRatingSpinner = findViewById(R.id.painRatingSpinner);
+    private Spinner monthSpinner;
+    private Spinner daySpinner;
+    private Spinner yearSpinner;
+    private Spinner hourSpinner;
+    private Spinner meridiemSpinner;
+    private Spinner painRatingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        monthSpinner = findViewById(R.id.monthSpinner);
+        daySpinner = findViewById(R.id.daySpinner);
+        yearSpinner = findViewById(R.id.yearSpinner);
+        hourSpinner = findViewById(R.id.hourSpinner);
+        meridiemSpinner = findViewById(R.id.meridiemSpinner);
+        painRatingSpinner = findViewById(R.id.painRatingSpinner);
+
+        // make button invisible for now, as it does nothing
+        // NOTE: make visible once it does something meaningful
+        Button oldInfoBtn = findViewById(R.id.oldInfoBtn);
+        oldInfoBtn.setVisibility(View.GONE);
 
         populateDaysAndYears();
         setSpinners();
@@ -65,6 +79,10 @@ public class EditActivity extends AppCompatActivity {
         ArrayAdapter<String> meridiemAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, meridiem);
         meridiemSpinner.setAdapter(meridiemAdapter);
+
+        ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, painRating);
+        painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
     public void getOldInfo(View view) {
@@ -105,10 +123,10 @@ public class EditActivity extends AppCompatActivity {
 
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
-        String flareData = monthSpinner.getSelectedItem().toString() + " " +
-                daySpinner.getSelectedItem() + " " + yearSpinner.getSelectedItem() + " " +
-                hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() + " " +
-                painRatingSpinner.getSelectedItem();
+        String flareData = monthSpinner.getSelectedItem().toString() + "/" +
+                daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + " " +
+                hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
+                " - pain rating " + painRatingSpinner.getSelectedItem();
 
         // put it in file
         editor.putString(flare, flareData);

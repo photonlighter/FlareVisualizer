@@ -14,16 +14,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // used to debug ListActivity; kept for future reference, but can be removed as desired
-    public void test(View view) {
+    public void moveToList(View view) {
         Intent intent = new Intent(this, ListActivity.class);
-        String[] testData = new String[4];
-        for (int i =0; i < 4; ++i){
-            testData[i] = "a" + i;
-        }
 
-        intent.putExtra("data", testData);
-        intent.putExtra("triggerType", "hi");
+        intent.putExtra("triggerType", "Activity");
 
+        startActivity(intent);
+    }
+
+    // used to debug EditActivity; kept for future reference, but can be removed as desired
+    public void moveToEdit(View view) {
+        Intent intent = new Intent(this, EditActivity.class);
         startActivity(intent);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.cs121.flarevisualizer;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -25,13 +26,24 @@ public class ListActivity extends AppCompatActivity {
 
         // fetch extras from the intent
         if (extras != null){
-            // trigger data that will be displayed in list; should be pre-formatted
-            data = extras.getStringArray("data");
             // type of trigger data that is being displayed; used for header
             triggerType = extras.getString("triggerType");
         }
 
-        // set header according to the trigger type
+        // get trigger data that will be displayed in list; should be pre-formatted
+
+        SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
+        int maxIndex = pref.getInt("maxIndex", -1);
+        data = new String[maxIndex + 1];
+
+        // populate array with all entries stored in file
+        for (int currIndex = 0; currIndex <= maxIndex; ++currIndex) {
+            String flare = "flare" + currIndex;
+            data[currIndex] = pref.getString(flare, null);
+        }
+
+
+                // set header according to the trigger type
         TextView header = findViewById(R.id.triggerListHeader);
         header.setText(getString(R.string.trigger_list, triggerType));
 
