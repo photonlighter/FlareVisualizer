@@ -124,7 +124,7 @@ public class EditActivity extends AppCompatActivity {
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
         String flareData = monthSpinner.getSelectedItem().toString() + "/" +
-                daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + " " +
+                daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
                 hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
                 " - pain rating " + painRatingSpinner.getSelectedItem();
 
