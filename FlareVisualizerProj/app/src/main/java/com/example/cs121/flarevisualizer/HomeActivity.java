@@ -2,9 +2,6 @@ package com.example.cs121.flarevisualizer;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,17 +20,6 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -88,29 +74,36 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_diet) {
             // Go to diet activity
-            Intent intent = new Intent(this,DietActivity.class);
+            // from Sammy's code in MainActivity
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("triggerType", "Diet");
             startActivity(intent);
+
+            // test data from Sammy, may be deleted in the future
+            /*String[] testData = new String[4];
+            for (int i =0; i < 4; ++i){
+                testData[i] = "a" + i;
+            }*/
+            //intent.putExtra("data", testData);
 
         } else if (id == R.id.nav_activity) {
             // Go to exercise activity
+            // from Sammy's code in MainActivity
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("triggerType", "Activity");
+            startActivity(intent);
 
         } else if (id == R.id.nav_misc_triggers) {
             // Go to miscellaneous triggers activity
             // from Sammy's code in MainActivity
             Intent intent = new Intent(this, ListActivity.class);
-            String[] testData = new String[4];
-            for (int i =0; i < 4; ++i){
-                testData[i] = "a" + i;
-            }
-
-            intent.putExtra("data", testData);
-            intent.putExtra("triggerType", "hi");
-
+            intent.putExtra("triggerType", "Miscellany");
             startActivity(intent);
 
         } else if (id == R.id.nav_flare_edit) {
             // Go to flare edit activity
-
+            Intent intent = new Intent(this, EditActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
