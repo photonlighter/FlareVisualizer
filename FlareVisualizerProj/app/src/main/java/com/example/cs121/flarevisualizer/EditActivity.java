@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class EditActivity extends AppCompatActivity {
 
     private String[] months = {"M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
@@ -34,10 +37,16 @@ public class EditActivity extends AppCompatActivity {
 
     private LinearLayout theTriggerLayout;
 
+    //database references
+    private DatabaseReference mDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        //set up database reference
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
