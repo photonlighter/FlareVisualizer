@@ -1,12 +1,18 @@
 package com.example.cs121.flarevisualizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,6 +32,8 @@ public class EditActivity extends AppCompatActivity {
     private Spinner meridiemSpinner;
     private Spinner painRatingSpinner;
 
+    private LinearLayout theTriggerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +45,8 @@ public class EditActivity extends AppCompatActivity {
         hourSpinner = findViewById(R.id.hourSpinner);
         meridiemSpinner = findViewById(R.id.meridiemSpinner);
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
+
+        theTriggerLayout = findViewById(R.id.editTriggerLayout);
 
         // make button invisible for now, as it does nothing
         // NOTE: make visible once it does something meaningful
@@ -136,5 +146,18 @@ public class EditActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void addTriggerField(View view) {
+        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View newField = null;
+        if (inflater != null) {
+            newField = inflater.inflate(R.layout.edit_trigger_row, null);
+        }
+        theTriggerLayout.addView(newField, theTriggerLayout.getChildCount());
+    }
+
+    public void deleteTriggerField(View view) {
+        theTriggerLayout.removeView((View)view.getParent());
     }
 }
