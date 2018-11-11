@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -43,7 +45,8 @@ public class EditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+
+        super.setContentView(R.layout.activity_edit);
 
         //set up database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -56,11 +59,6 @@ public class EditActivity extends AppCompatActivity {
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
 
         theTriggerLayout = findViewById(R.id.editTriggerLayout);
-
-        // make button invisible for now, as it does nothing
-        // NOTE: make visible once it does something meaningful
-        Button oldInfoBtn = findViewById(R.id.oldInfoBtn);
-        oldInfoBtn.setVisibility(View.GONE);
 
         populateDaysAndYears();
         setSpinners();
@@ -153,7 +151,7 @@ public class EditActivity extends AppCompatActivity {
 
         editor.commit();
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
     }
 

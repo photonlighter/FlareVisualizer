@@ -1,10 +1,14 @@
 package com.example.cs121.flarevisualizer;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -15,7 +19,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends HomeActivity {
 
     private LineChart lineChart;
 
@@ -23,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        FrameLayout container = findViewById(R.id.content_frame);
+        View contentView = getLayoutInflater().inflate(R.layout.activity_list, null, false);
+        container.addView(contentView, 0);
 
         lineChart = (LineChart) findViewById(R.id.chart); // LineChart is initialized from xml
         LineDataSet lineDataSet = new LineDataSet(dataValues(), "Data Set 1");

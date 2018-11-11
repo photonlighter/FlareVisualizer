@@ -1,14 +1,19 @@
 package com.example.cs121.flarevisualizer;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ListActivity extends AppCompatActivity {
+public class ListActivity extends HomeActivity {
 
     private RecyclerView triggerList;
     private RecyclerView.Adapter adapter;
@@ -19,7 +24,10 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+
+        FrameLayout container = findViewById(R.id.content_frame);
+        View contentView = getLayoutInflater().inflate(R.layout.activity_list, null, false);
+        container.addView(contentView, 0);
 
         // get intent from main activity
         Bundle extras = getIntent().getExtras();
