@@ -5,10 +5,11 @@
 
     <Spinner
         android:id="@+id/triggerSpinner"
-        android:layout_width="108dp"
+        android:layout_width="112dp"
         android:layout_height="45dp"
+        android:layout_weight="1"
         android:entries="@array/triggerTypes"
-        android:layout_weight="1" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/triggerName"
@@ -17,6 +18,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="Trigger Name"
+        android:textSize="20sp"
         android:inputType="textPersonName" />
 
     <Button

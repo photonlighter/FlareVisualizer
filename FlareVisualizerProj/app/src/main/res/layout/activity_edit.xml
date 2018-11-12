@@ -12,11 +12,12 @@
         <TextView
             android:id="@+id/dateHeader"
             android:layout_width="wrap_content"
-            android:layout_height="22dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="44dp"
             android:text="@string/date_header"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,19 +28,21 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="44dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/dateHeader"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/monthDaySlash"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="48dp"
-            android:text="@string/date_slash"
-            app:layout_constraintStart_toEndOf="@+id/monthSpinner"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/monthDaySlash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/date_slash"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/monthSpinner"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/daySpinner"
@@ -48,19 +51,21 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="44dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/monthDaySlash"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/dayYearSlash"
-            android:layout_width="8dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="48dp"
-            android:text="@string/date_slash"
-            app:layout_constraintStart_toEndOf="@+id/daySpinner"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/dayYearSlash"
+        android:layout_width="8dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="44dp"
+        android:text="@string/date_slash"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/daySpinner"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/yearSpinner"
@@ -80,6 +85,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="8dp"
             android:text="@string/time_header"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
@@ -90,19 +96,21 @@
             android:layout_marginStart="24dp"
             android:layout_marginLeft="24dp"
             android:layout_marginTop="8dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/timeHeader"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
-        <TextView
-            android:id="@+id/hourText"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginLeft="12dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/hour_text"
-            app:layout_constraintStart_toEndOf="@+id/hourSpinner"
-            app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
+    <TextView
+        android:id="@+id/hourText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/hour_text"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/hourSpinner"
+        app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
         <Spinner
             android:id="@+id/meridiemSpinner"
@@ -111,19 +119,21 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/hourText"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
     <TextView
-            android:id="@+id/painRatingHeader"
-            android:layout_width="81dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/pain_rating"
-            app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
-            app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
+        android:id="@+id/painRatingHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/pain_rating"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
+        app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
         <Spinner
             android:id="@+id/painRatingSpinner"
@@ -132,6 +142,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="14dp"
+            android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
@@ -139,13 +150,15 @@
         android:id="@+id/newInfoBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:onClick="submitNewInfo"
         android:text="@string/new_info_submission"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/horizGuidelineEnd" />
 
         <android.support.constraint.Guideline
             android:id="@+id/horizGuideline1"
@@ -175,19 +188,19 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.85" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/leftVerticalGuideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05" />
+    <android.support.constraint.Guideline
+        android:id="@+id/leftVerticalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/rightVerticalGuideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
+    <android.support.constraint.Guideline
+        android:id="@+id/rightVerticalGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="1.0" />
 
         <Button
             android:id="@+id/button3"
