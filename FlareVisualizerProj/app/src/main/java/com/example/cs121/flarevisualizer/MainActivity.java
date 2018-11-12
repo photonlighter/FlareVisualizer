@@ -19,7 +19,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends HomeActivity {
+public class MainActivity extends AppCompatActivity {
 
     private LineChart lineChart;
 
@@ -27,9 +27,7 @@ public class MainActivity extends HomeActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FrameLayout container = findViewById(R.id.content_frame);
-        View contentView = getLayoutInflater().inflate(R.layout.activity_list, null, false);
-        container.addView(contentView, 0);
+        setContentView(R.layout.activity_main);
 
         lineChart = (LineChart) findViewById(R.id.chart); // LineChart is initialized from xml
         LineDataSet lineDataSet = new LineDataSet(dataValues(), "Data Set 1");
