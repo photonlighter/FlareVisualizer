@@ -135,20 +135,17 @@
             app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
-        <Button
-            android:id="@+id/newInfoBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:onClick="submitNewInfo"
-            android:text="@string/new_info_submission"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/horizGuidelineEnd" />
+    <Button
+        android:id="@+id/newInfoBtn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:onClick="submitNewInfo"
+        android:text="@string/new_info_submission"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 
         <android.support.constraint.Guideline
             android:id="@+id/horizGuideline1"
@@ -164,19 +161,19 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.25" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/horizGuideline3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.4" />
+    <android.support.constraint.Guideline
+        android:id="@+id/horizGuideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/horizGuidelineEnd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.80" />
+    <android.support.constraint.Guideline
+        android:id="@+id/horizGuidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.85" />
 
         <android.support.constraint.Guideline
             android:id="@+id/leftVerticalGuideline"
