@@ -21,6 +21,21 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.sql.Timestamp;
+
+
+/*
+*  To do: Add an update flare and end flare button. On updating, retrieve the database object, update
+*  it with new info, and push it back.
+*  Ending requires no new info. On ending a flare, the most recent flare will be retrieved and we'll
+*  calculate the average pain and get the length of the flare. Both of these numbers, along with the
+*  start and end times will be stored in a general flare object and will be pushed to a database
+*  reference of that object type.
+*
+*  If a trigger is not already in the database lists, add it to them rather than throw an error to the
+*  user
+*
+ */
 public class EditActivity extends HomeActivity {
 
     private String[] months = {"M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
@@ -40,7 +55,11 @@ public class EditActivity extends HomeActivity {
     private LinearLayout theTriggerLayout;
 
     //database references
-    private DatabaseReference mDatabase;
+    private FirebaseDatabase mDatabase;
+    private DatabaseReference entryReferenceFlare;
+    private DatabaseReference entryReferenceGeneral;
+    private DatabaseReference entryReferenceList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +70,10 @@ public class EditActivity extends HomeActivity {
 
 
         //set up database reference
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance();
+        entryReferenceFlare = mDatabase.getReference().child("Flares");
+        entryReferenceGeneral = mDatabase.getReference().child("Abstract");
+        entryReferenceList = mDatabase.getReference().child("Lists");
 
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
@@ -140,7 +162,21 @@ public class EditActivity extends HomeActivity {
             return;
         }
 
-        int index = pref.getInt("maxIndex", -1) + 1;
+        DatabaseReference flarePushRef = entryReferenceFlare.push();
+        DatabaseReference listPushRef = entryReferenceList.push();
+
+        //we'll use this to push the same key to flare and abstract
+        String flareKey = flarePushRef.getKey();
+
+        //instead of using the spinners (to be removed, sorry!), get the
+        //timestamp of the current time
+        Timestamp time = new Timestamp(System.currentTimeMillis());
+        int pain = (int) painRatingSpinner.getSelectedItem();
+        FlareClass flare = new FlareClass();
+        flare.AddFlare(pain, time, flareKey);
+        flarePushRef.setValue(flare);
+
+        /*int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
         String flareData = monthSpinner.getSelectedItem().toString() + "/" +
                 daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
@@ -151,7 +187,7 @@ public class EditActivity extends HomeActivity {
         editor.putString(flare, flareData);
         editor.putInt("maxIndex", index);
 
-        editor.commit();
+        editor.commit();*/
 
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
