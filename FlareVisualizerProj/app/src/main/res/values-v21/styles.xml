@@ -8,8 +8,19 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/colorText</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
-        <item name="android:textColorPrimaryInverse">@color/colorText</item>
+        <item name="android:textColorSecondary">@color/colorText</item>
+        <item name="android:textColorTertiary">@color/colorText</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="drawerArrowStyle">@style/DrawerIcon</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowIcon</item>
+    </style>
+
+    <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/colorText</item>
+    </style>
+
+    <style name="OverflowIcon" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:tint">@color/colorText</item>
     </style>
 </resources>
