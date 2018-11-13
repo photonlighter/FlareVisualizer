@@ -72,6 +72,11 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_main) {
+
+            Intent intent = new Intent(this, MainActivity.class);
+            //intent.putExtra("triggerType", "Main");
+            startActivity(intent);
+
             // Go to home screen
 
         } else if (id == R.id.nav_diet) {

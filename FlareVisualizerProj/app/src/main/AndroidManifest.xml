@@ -18,6 +18,7 @@
         -->
         <activity android:name=".ListActivity" />
         <activity android:name=".EditActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
