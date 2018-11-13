@@ -15,6 +15,8 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     protected DrawerLayout drawer;
+    protected ActionBarDrawerToggle toggle;
+    protected Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,13 +24,12 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
-        toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -76,6 +77,7 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, MainActivity.class);
             //intent.putExtra("triggerType", "Main");
             startActivity(intent);
+            drawer.closeDrawers();
 
             // Go to home screen
 
@@ -85,6 +87,7 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Diet");
             startActivity(intent);
+            drawer.closeDrawers();
 
             // test data from Sammy, may be deleted in the future
             /*String[] testData = new String[4];
@@ -99,6 +102,7 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Activity");
             startActivity(intent);
+            drawer.closeDrawers();
 
         } else if (id == R.id.nav_misc_triggers) {
             // Go to miscellaneous triggers activity
@@ -106,15 +110,23 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Miscellany");
             startActivity(intent);
+            drawer.closeDrawers();
 
         } else if (id == R.id.nav_flare_edit) {
             // Go to flare edit activity
             Intent intent = new Intent(this, EditActivity.class);
             startActivity(intent);
+            drawer.closeDrawers();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        toggle.syncState();
     }
 }

@@ -21,7 +21,7 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends HomeActivity {
 
     private String[] months = {"M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
     private String[] days = new String[32];
@@ -46,7 +46,9 @@ public class EditActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        super.setContentView(R.layout.activity_edit);
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_edit, contentFrameLayout);
+
 
         //set up database reference
         mDatabase = FirebaseDatabase.getInstance().getReference();
