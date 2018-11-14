@@ -19,7 +19,7 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends HomeActivity {
 
     private LineChart lineChart;
 
@@ -27,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+       // setContentView(R.layout.activity_main);
+
+        FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
+        getLayoutInflater().inflate(R.layout.activity_main, contentFrameLayout);
 
         lineChart = (LineChart) findViewById(R.id.chart); // LineChart is initialized from xml
         LineDataSet lineDataSet = new LineDataSet(dataValues(), "Data Set 1");
@@ -37,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         LineData lineData = new LineData(dataSets);
         lineChart.setDragEnabled(true);
         lineChart.setScaleEnabled(false);
+
+        lineDataSet.setFillAlpha(110);
+
+        lineDataSet.setColor(Color.RED); // line color
 
 
         lineChart.setData(lineData);
@@ -74,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Entry> dataValues(){
 
         ArrayList<Entry> dataVals = new ArrayList<Entry>();
-        dataVals.add(new Entry(0, 20));
-        dataVals.add(new Entry(1, 50));
-        dataVals.add(new Entry(2, 30));
-        dataVals.add(new Entry(3, 10));
-        dataVals.add(new Entry(4, 40));
+        dataVals.add(new Entry(0, 8));
+        dataVals.add(new Entry(1, 9));
+        dataVals.add(new Entry(2, 4));
+        dataVals.add(new Entry(3, 5));
+        dataVals.add(new Entry(4, 1));
 
         return dataVals;
     }
