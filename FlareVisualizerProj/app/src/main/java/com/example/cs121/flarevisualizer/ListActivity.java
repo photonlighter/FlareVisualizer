@@ -32,22 +32,38 @@ public class ListActivity extends HomeActivity {
         // get intent from main activity
         Bundle extras = getIntent().getExtras();
 
+        String rowType = "Act.";
         // fetch extras from the intent
         if (extras != null){
             // type of trigger data that is being displayed; used for header
             triggerType = extras.getString("triggerType");
+
+            assert triggerType != null;
+            if (triggerType.equals("Diet")){
+                rowType = triggerType;
+            } else if (triggerType.equals("Miscellany")){
+                rowType = "Misc";
+            }
         }
 
         // get trigger data that will be displayed in list; should be pre-formatted
 
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
-        int maxIndex = pref.getInt("maxIndex", -1);
+        int maxIndex = 0;
+        if (rowType.equals("Act.")){
+            maxIndex = pref.getInt("actIndex", -1);
+        } else if (rowType.equals("Diet")){
+            maxIndex = pref.getInt("dietIndex", -1);
+        } else {
+            maxIndex = pref.getInt("miscIndex", -1);
+        }
+
         data = new String[maxIndex + 1];
 
         // populate array with all entries stored in file
         for (int currIndex = 0; currIndex <= maxIndex; ++currIndex) {
-            String flare = "flare" + currIndex;
-            data[currIndex] = pref.getString(flare, null);
+            String row = rowType + currIndex;
+            data[currIndex] = pref.getString(row, null);
         }
 
 

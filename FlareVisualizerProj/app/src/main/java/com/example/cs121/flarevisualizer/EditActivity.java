@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -147,9 +148,44 @@ public class EditActivity extends HomeActivity {
                 hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
                 " - pain rating " + painRatingSpinner.getSelectedItem();
 
+        int actIndex = pref.getInt("actIndex", -1);
+        int dietIndex = pref.getInt("dietIndex", -1);
+        int miscIndex = pref.getInt("miscIndex", -1);
+
+        for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+            View row = theTriggerLayout.getChildAt(i);
+            Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+            EditText rowEdit = row.findViewById(R.id.triggerName);
+
+            String rowType = rowSpinner.getSelectedItem().toString();
+            String rowName = rowEdit.getText().toString().trim();
+
+            if(!rowName.matches("")){
+                String triggerData = monthSpinner.getSelectedItem().toString() + "/" +
+                        daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
+                        hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem()
+                        + " - " + rowName;
+
+                if (rowType.equals("Act.")){
+                    ++actIndex;
+                    rowType += actIndex;
+                } else if (rowType.equals("Diet")) {
+                    ++dietIndex;
+                    rowType += dietIndex;
+                } else {
+                    ++miscIndex;
+                    rowType += miscIndex;
+                }
+
+                editor.putString(rowType, triggerData);
+            }
+        }
         // put it in file
         editor.putString(flare, flareData);
         editor.putInt("maxIndex", index);
+        editor.putInt("actIndex", actIndex);
+        editor.putInt("dietIndex", dietIndex);
+        editor.putInt("miscIndex", miscIndex);
 
         editor.commit();
 
