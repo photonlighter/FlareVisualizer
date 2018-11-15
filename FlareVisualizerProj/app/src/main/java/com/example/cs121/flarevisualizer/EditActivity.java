@@ -189,7 +189,7 @@ public class EditActivity extends HomeActivity {
 
         editor.commit();
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
