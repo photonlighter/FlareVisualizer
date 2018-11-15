@@ -4,16 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="?attr/actionBarSize"
+
     tools:context=".MainActivity">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/chart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <LinearLayout
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:orientation="vertical">
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <com.github.mikephil.charting.charts.LineChart
+         android:id="@+id/chart3"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_weight="1"/>
+
+
+        <com.github.mikephil.charting.charts.LineChart
+         android:id="@+id/chart4"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_weight="1"/>
+    </LinearLayout>
 
     <!--
+    android:layout_marginTop="?attr/actionBarSize" <<< I removed this from line 7 since it looked awkward
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
