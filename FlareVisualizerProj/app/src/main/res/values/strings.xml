@@ -15,6 +15,7 @@
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="app_description">An app for tracking pain flares</string>
+    <string name="copyright">&#169; Jesse Galvan, Sammy Jia, Cassady Latham, Zoe Tacderas</string>
 
     <string name="main_button">Main</string>
     <string name="diet_button">Diet</string>
