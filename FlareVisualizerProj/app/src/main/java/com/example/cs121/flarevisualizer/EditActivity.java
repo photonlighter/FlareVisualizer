@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -22,6 +23,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /*
@@ -151,7 +154,7 @@ public class EditActivity extends HomeActivity {
         //NOTE: current contents are placeholders for when database is substituted in
         // get the index of the new entry and make a key for it
 
-        if (monthSpinner.getSelectedItemPosition() <= 0 ||
+        /*if (monthSpinner.getSelectedItemPosition() <= 0 ||
                 daySpinner.getSelectedItemPosition() <= 0 ||
                 yearSpinner.getSelectedItemPosition() <= 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -160,7 +163,7 @@ public class EditActivity extends HomeActivity {
 
             toast.show();
             return;
-        }
+        }*/
 
         DatabaseReference flarePushRef = entryReferenceFlare.push();
         DatabaseReference listPushRef = entryReferenceList.push();
@@ -171,19 +174,38 @@ public class EditActivity extends HomeActivity {
         //instead of using the spinners (to be removed, sorry!), get the
         //timestamp of the current time
         Timestamp time = new Timestamp(System.currentTimeMillis());
-        int pain = (int) painRatingSpinner.getSelectedItem();
+        String pain = painRatingSpinner.getSelectedItem().toString();
         FlareClass flare = new FlareClass();
-        flare.AddFlare(pain, time, flareKey);
-        flarePushRef.setValue(flare);
-
+        List<String> triggers = new ArrayList<>();
         /*int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
         String flareData = monthSpinner.getSelectedItem().toString() + "/" +
                 daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
                 hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
-                " - pain rating " + painRatingSpinner.getSelectedItem();
+                " - pain rating " + painRatingSpinner.getSelectedItem();*/
 
-        // put it in file
+         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+             View row = theTriggerLayout.getChildAt(i);
+             Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+             EditText rowEdit = row.findViewById(R.id.triggerName);
+
+             String rowType = rowSpinner.getSelectedItem().toString();
+             String rowName = rowEdit.getText().toString().trim();
+
+             if (!rowName.matches("")) {
+                 //Add the triggers to a list to be passed in with the flare objects to the database
+                 triggers.add(rowName);
+
+                 //If the current trigger isn't in the specified list, add it to that list in the DB
+                 //Not currently implemented
+             }
+         }
+
+         //Set the data we've entered into the database
+         flare.UpdateFlare(Integer.valueOf(pain), time, flareKey, triggers);
+         flarePushRef.setValue(flare);
+
+        /* put it in file
         editor.putString(flare, flareData);
         editor.putInt("maxIndex", index);
 
