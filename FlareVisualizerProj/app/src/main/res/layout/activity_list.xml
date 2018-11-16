@@ -8,11 +8,11 @@
     tools:context=".ListActivity">
 
     <TextView
-        android:layout_gravity="center_horizontal"
         android:id="@+id/triggerListHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="7dp"
         android:text="@string/trigger_list"
         android:textSize="20sp"

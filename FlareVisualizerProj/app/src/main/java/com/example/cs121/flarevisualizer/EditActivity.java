@@ -177,41 +177,61 @@ public class EditActivity extends HomeActivity {
         String pain = painRatingSpinner.getSelectedItem().toString();
         FlareClass flare = new FlareClass();
         List<String> triggers = new ArrayList<>();
-        /*int index = pref.getInt("maxIndex", -1) + 1;
+        int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
         String flareData = monthSpinner.getSelectedItem().toString() + "/" +
                 daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
                 hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
-                " - pain rating " + painRatingSpinner.getSelectedItem();*/
+                " - pain rating " + painRatingSpinner.getSelectedItem();
 
-         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
-             View row = theTriggerLayout.getChildAt(i);
-             Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
-             EditText rowEdit = row.findViewById(R.id.triggerName);
+        int actIndex = pref.getInt("actIndex", -1);
+        int dietIndex = pref.getInt("dietIndex", -1);
+        int miscIndex = pref.getInt("miscIndex", -1);
 
-             String rowType = rowSpinner.getSelectedItem().toString();
-             String rowName = rowEdit.getText().toString().trim();
+        for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+             triggers.add(rowName);
+            View row = theTriggerLayout.getChildAt(i);
+            Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+            EditText rowEdit = row.findViewById(R.id.triggerName);
 
-             if (!rowName.matches("")) {
-                 //Add the triggers to a list to be passed in with the flare objects to the database
-                 triggers.add(rowName);
+            String rowType = rowSpinner.getSelectedItem().toString();
+            String rowName = rowEdit.getText().toString().trim();
 
-                 //If the current trigger isn't in the specified list, add it to that list in the DB
-                 //Not currently implemented
-             }
-         }
+            if(!rowName.matches("")){
+                String triggerData = monthSpinner.getSelectedItem().toString() + "/" +
+                        daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
+                        hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem()
+                        + " - " + rowName;
 
-         //Set the data we've entered into the database
-         flare.UpdateFlare(Integer.valueOf(pain), time, flareKey, triggers);
-         flarePushRef.setValue(flare);
+                if (rowType.equals("Act.")){
+                    ++actIndex;
+                    rowType += actIndex;
+                } else if (rowType.equals("Diet")) {
+                    ++dietIndex;
+                    rowType += dietIndex;
+                } else {
+                    ++miscIndex;
+                    rowType += miscIndex;
+                }
 
-        /* put it in file
+                editor.putString(rowType, triggerData);
+            }
+        }
+        
+        //Set the data we've entered into the database
+        flare.UpdateFlare(Integer.valueOf(pain), time, flareKey, triggers);
+        flarePushRef.setValue(flare);
+      
+      
         editor.putString(flare, flareData);
         editor.putInt("maxIndex", index);
+        editor.putInt("actIndex", actIndex);
+        editor.putInt("dietIndex", dietIndex);
+        editor.putInt("miscIndex", miscIndex);
 
         editor.commit();*/
 
-        Intent intent = new Intent(this, HomeActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
