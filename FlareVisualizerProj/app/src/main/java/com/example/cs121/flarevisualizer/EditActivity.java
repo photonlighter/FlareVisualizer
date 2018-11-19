@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,8 +14,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -227,6 +231,67 @@ public class EditActivity extends HomeActivity {
 
         editor.commit();
 
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void updateInfo(View view) {
+        SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+        int index = pref.getInt("maxIndex", -1);
+        final String flareN = "flare" + index;
+
+        entryReferenceFlare.child(flareN).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                FlareClass flareC = dataSnapshot.getValue(FlareClass.class);
+                Timestamp time = new Timestamp(System.currentTimeMillis());
+                String pain = painRatingSpinner.getSelectedItem().toString();
+                List<String> trig = new ArrayList<>();
+
+                for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+                    View row = theTriggerLayout.getChildAt(i);
+                    Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+                    EditText rowEdit = row.findViewById(R.id.triggerName);
+
+                    String rowType = rowSpinner.getSelectedItem().toString();
+                    String rowName = rowEdit.getText().toString().trim();
+
+                    if(!rowName.matches("")){
+                        //get trigger strings to add to the flare objects
+                        trig.add(rowName);
+
+                        if (rowType.equals("Act.")){
+                            entryReferenceActivity.child(rowName).setValue(0);
+                        } else if (rowType.equals("Diet")) {
+                            entryReferenceDiet.child(rowName).setValue(0);
+                        } else {
+                            entryReferenceMisc.child(rowName).setValue(0);
+                        }
+                    }
+                }
+
+                flareC.UpdateFlare(pain, time, flareN, trig);
+
+                List <String> pains = flareC.getPain_Nums();
+                List<String> times = flareC.getTimes();
+                List<String> trigs = flareC.getTriggers();
+
+                dataSnapshot.getRef().child("pain_Nums").setValue(pains);
+                dataSnapshot.getRef().child("times").setValue(times);
+                dataSnapshot.getRef().child("triggers").setValue(trigs);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Error updating flare", Toast.LENGTH_LONG);
+            }
+
+        });
+
+
+        editor.commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
