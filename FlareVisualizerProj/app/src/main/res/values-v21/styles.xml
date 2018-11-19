@@ -23,4 +23,9 @@
     <style name="OverflowIcon" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:tint">@color/colorText</item>
     </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/spinner_item_background</item>
+    </style>
+
 </resources>

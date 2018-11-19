@@ -17,7 +17,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
             android:text="@string/date_header"
-            android:textSize="20sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -28,7 +28,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         app:layout_constraintStart_toEndOf="@+id/dateHeader"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +43,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:text="@string/date_slash"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/monthSpinner"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +54,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         app:layout_constraintStart_toEndOf="@+id/monthDaySlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -63,7 +69,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
         android:text="@string/date_slash"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/daySpinner"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,6 +80,9 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="4dp"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         app:layout_constraintStart_toEndOf="@+id/dayYearSlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -85,30 +94,33 @@
             android:layout_marginLeft="4dp"
             android:layout_marginTop="8dp"
             android:text="@string/time_header"
-            android:textSize="20sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
-        <Spinner
-            android:id="@+id/hourSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginLeft="24dp"
-            android:layout_marginTop="8dp"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/timeHeader"
-            app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
+    <Spinner
+        android:id="@+id/hourSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
+        app:layout_constraintStart_toEndOf="@+id/timeHeader"
+        app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
     <TextView
         android:id="@+id/hourText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginLeft="12dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:text="@string/hour_text"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/hourSpinner"
         app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
@@ -119,7 +131,10 @@
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="8dp"
-            android:textSize="20sp"
+            android:textSize="16sp"
+            style="@style/SpinnerTheme"
+            android:paddingLeft="4dp"
+            android:paddingRight="30dp"
             app:layout_constraintStart_toEndOf="@+id/hourText"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
@@ -129,22 +144,25 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="8dp"
         android:text="@string/pain_rating"
-        android:textSize="20sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
         app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
-        <Spinner
-            android:id="@+id/painRatingSpinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="14dp"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
-            app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
+    <Spinner
+        android:id="@+id/painRatingSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
+        app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
+        app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
     <Button
         android:id="@+id/newInfoBtn"

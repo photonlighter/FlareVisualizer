@@ -105,27 +105,27 @@ public class EditActivity extends HomeActivity {
 
     private void setSpinners() {
         ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, months);
+                R.layout.spinner_item, months);
         monthSpinner.setAdapter(monthAdapter);
 
         ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, days);
+                R.layout.spinner_item, days);
         daySpinner.setAdapter(dayAdapter);
 
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, years);
+                R.layout.spinner_item, years);
         yearSpinner.setAdapter(yearAdapter);
 
         ArrayAdapter<String> hourAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, hours);
+                R.layout.spinner_item, hours);
         hourSpinner.setAdapter(hourAdapter);
 
         ArrayAdapter<String> meridiemAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, meridiem);
+                R.layout.spinner_item, meridiem);
         meridiemSpinner.setAdapter(meridiemAdapter);
 
         ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, painRating);
+                R.layout.spinner_item, painRating);
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
@@ -177,25 +177,20 @@ public class EditActivity extends HomeActivity {
         String pain = painRatingSpinner.getSelectedItem().toString();
         FlareClass flare = new FlareClass();
         List<String> triggers = new ArrayList<>();
-        int index = pref.getInt("maxIndex", -1) + 1;
-        String flare = "flare" + index;
-        String flareData = monthSpinner.getSelectedItem().toString() + "/" +
-                daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
-                hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
-                " - pain rating " + painRatingSpinner.getSelectedItem();
 
         int actIndex = pref.getInt("actIndex", -1);
         int dietIndex = pref.getInt("dietIndex", -1);
         int miscIndex = pref.getInt("miscIndex", -1);
 
         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
-             triggers.add(rowName);
             View row = theTriggerLayout.getChildAt(i);
             Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
             EditText rowEdit = row.findViewById(R.id.triggerName);
 
             String rowType = rowSpinner.getSelectedItem().toString();
             String rowName = rowEdit.getText().toString().trim();
+
+            triggers.add(rowName);
 
             if(!rowName.matches("")){
                 String triggerData = monthSpinner.getSelectedItem().toString() + "/" +
@@ -221,15 +216,12 @@ public class EditActivity extends HomeActivity {
         //Set the data we've entered into the database
         flare.UpdateFlare(Integer.valueOf(pain), time, flareKey, triggers);
         flarePushRef.setValue(flare);
-      
-      
-        editor.putString(flare, flareData);
-        editor.putInt("maxIndex", index);
+
         editor.putInt("actIndex", actIndex);
         editor.putInt("dietIndex", dietIndex);
         editor.putInt("miscIndex", miscIndex);
 
-        editor.commit();*/
+        editor.commit();
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

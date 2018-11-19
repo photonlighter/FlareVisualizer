@@ -153,8 +153,8 @@ public class MainActivity extends HomeActivity {
         set1.setFillAlpha(80);
 
         //custom gradient to color the lower bound of the graph
-        Drawable drawable = ContextCompat.getDrawable(this, R.drawable.gradient1);
-        set1.setFillDrawable(drawable);
+        //Drawable drawable = ContextCompat.getDrawable(this, R.drawable.gradient1);
+        //set1.setFillDrawable(drawable);
 
         LineData data = new LineData(set1);
         return data;
