@@ -3,16 +3,10 @@ package com.example.cs121.flarevisualizer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -28,16 +22,13 @@ import java.util.List;
 
 
 /*
-*  To do: Add an update flare and end flare button. On updating, retrieve the database object, update
-*  it with new info, and push it back.
-*  Ending requires no new info. On ending a flare, the most recent flare will be retrieved and we'll
-*  calculate the average pain and get the length of the flare. Both of these numbers, along with the
-*  start and end times will be stored in a general flare object and will be pushed to a database
-*  reference of that object type.
-*
-*  If a trigger is not already in the database lists, add it to them rather than throw an error to the
-*  user
-*
+ *  To do: Add an update flare and end flare button. On updating, retrieve the database object, update
+ *  it with new info, and push it back.
+ *  Ending requires no new info. On ending a flare, the most recent flare will be retrieved and we'll
+ *  calculate the average pain and get the length of the flare. Both of these numbers, along with the
+ *  start and end times will be stored in a general flare object and will be pushed to a database
+ *  reference of that object type.
+ *
  */
 public class EditActivity extends HomeActivity {
 
@@ -61,7 +52,9 @@ public class EditActivity extends HomeActivity {
     private FirebaseDatabase mDatabase;
     private DatabaseReference entryReferenceFlare;
     private DatabaseReference entryReferenceGeneral;
-    private DatabaseReference entryReferenceList;
+    private DatabaseReference entryReferenceActivity;
+    private DatabaseReference entryReferenceDiet;
+    private DatabaseReference entryReferenceMisc;
 
 
     @Override
@@ -76,7 +69,9 @@ public class EditActivity extends HomeActivity {
         mDatabase = FirebaseDatabase.getInstance();
         entryReferenceFlare = mDatabase.getReference().child("Flares");
         entryReferenceGeneral = mDatabase.getReference().child("Abstract");
-        entryReferenceList = mDatabase.getReference().child("Lists");
+        entryReferenceActivity = mDatabase.getReference().child("Activity");
+        entryReferenceDiet = mDatabase.getReference().child("Diet");
+        entryReferenceMisc = mDatabase.getReference().child("Misc");
 
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
@@ -129,6 +124,7 @@ public class EditActivity extends HomeActivity {
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
+
     public void getOldInfo(View view) {
         // currently does nothing because of lack of database
         // month, day, year, hour, and meridiem spinners must be set to work
@@ -165,18 +161,14 @@ public class EditActivity extends HomeActivity {
             return;
         }*/
 
-        DatabaseReference flarePushRef = entryReferenceFlare.push();
-        DatabaseReference listPushRef = entryReferenceList.push();
-
-        //we'll use this to push the same key to flare and abstract
-        String flareKey = flarePushRef.getKey();
 
         //instead of using the spinners (to be removed, sorry!), get the
         //timestamp of the current time
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String pain = painRatingSpinner.getSelectedItem().toString();
-        FlareClass flare = new FlareClass();
-        List<String> triggers = new ArrayList<>();
+        FlareClass flareC = new FlareClass();
+        List<String> trig = new ArrayList<>();
+
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
         String flareData = monthSpinner.getSelectedItem().toString() + "/" +
@@ -189,7 +181,6 @@ public class EditActivity extends HomeActivity {
         int miscIndex = pref.getInt("miscIndex", -1);
 
         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
-             triggers.add(rowName);
             View row = theTriggerLayout.getChildAt(i);
             Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
             EditText rowEdit = row.findViewById(R.id.triggerName);
@@ -198,18 +189,23 @@ public class EditActivity extends HomeActivity {
             String rowName = rowEdit.getText().toString().trim();
 
             if(!rowName.matches("")){
+                //get trigger strings to add to the flare objects
+                trig.add(rowName);
                 String triggerData = monthSpinner.getSelectedItem().toString() + "/" +
                         daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
                         hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem()
                         + " - " + rowName;
 
                 if (rowType.equals("Act.")){
+                    entryReferenceActivity.child(rowName).setValue(0);
                     ++actIndex;
                     rowType += actIndex;
                 } else if (rowType.equals("Diet")) {
+                    entryReferenceDiet.child(rowName).setValue(0);
                     ++dietIndex;
                     rowType += dietIndex;
                 } else {
+                    entryReferenceMisc.child(rowName).setValue(0);
                     ++miscIndex;
                     rowType += miscIndex;
                 }
@@ -217,19 +213,19 @@ public class EditActivity extends HomeActivity {
                 editor.putString(rowType, triggerData);
             }
         }
-        
+
         //Set the data we've entered into the database
-        flare.UpdateFlare(Integer.valueOf(pain), time, flareKey, triggers);
-        flarePushRef.setValue(flare);
-      
-      
+        flareC.UpdateFlare(pain, time, flare, trig);
+        entryReferenceFlare.child(flare).setValue(flareC);
+
+
         editor.putString(flare, flareData);
         editor.putInt("maxIndex", index);
         editor.putInt("actIndex", actIndex);
         editor.putInt("dietIndex", dietIndex);
         editor.putInt("miscIndex", miscIndex);
 
-        editor.commit();*/
+        editor.commit();
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -248,3 +244,4 @@ public class EditActivity extends HomeActivity {
         theTriggerLayout.removeView((View)view.getParent());
     }
 }
+

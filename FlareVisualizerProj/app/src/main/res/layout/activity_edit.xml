@@ -7,19 +7,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context=".EditActivity" >
+        tools:context=".EditActivity3" >
 
-        <TextView
-            android:id="@+id/dateHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="4dp"
-            android:text="@string/date_header"
-            android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
-            app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/dateHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/date_header"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Spinner
         android:id="@+id/monthSpinner"
@@ -76,6 +76,7 @@
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/dayYearSlash"
         app:layout_constraintTop_toTopOf="parent" />
+
 
         <TextView
             android:id="@+id/timeHeader"
@@ -147,7 +148,7 @@
             app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
     <Button
-        android:id="@+id/newInfoBtn"
+        android:id="@+id/newFlareBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -203,7 +204,7 @@
         app:layout_constraintGuide_percent="1.0" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/addTriggerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="4dp"
@@ -226,7 +227,7 @@
         app:layout_constraintBottom_toTopOf="@+id/horizGuidelineEnd"
         app:layout_constraintEnd_toStartOf="@+id/rightVerticalGuideline"
         app:layout_constraintStart_toStartOf="@+id/leftVerticalGuideline"
-        app:layout_constraintTop_toBottomOf="@+id/button3">
+        app:layout_constraintTop_toBottomOf="@+id/addTriggerBtn">
 
         <LinearLayout
             android:id="@+id/editTriggerLayout"
