@@ -2,192 +2,17 @@ package com.example.cs121.flarevisualizer;
 
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
+
+import java.io.Serializable;
 import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
-class TriggerLists {
-
-    //for each mapping, the String is the key and the trigger,
-    //while the Integer is the accumulated frequency with respect
-    //to flares. The Int is updated every time a flare is declared
-    //done with the by adding the average pain number of the flare
-    //to the existing Int. Each trigger starts with an int of 0
-    private List<Triggers> ActivityList;
-    private List<Triggers> DietList;
-    private List<Triggers> MiscList;
-
-    public TriggerLists() {
-        //Default constructor to retrieve the class object
-        ActivityList = new ArrayList<>();
-        DietList = new ArrayList<>();
-        MiscList = new ArrayList<>();
-
-    }
-
-    public boolean doesTriggerExist(String trigger, String list) {
-        boolean exists = false;
-        Triggers temp = new Triggers();
-        switch (list) {
-            case "activity":
-                ListIterator<Triggers> iteratorA = ActivityList.listIterator();
-                while (iteratorA.hasNext()) {
-                    temp = iteratorA.next();
-                    if (temp.containsTrigger(trigger)) {
-                        exists = true;
-                    }
-                }
-            case "diet":
-                ListIterator<Triggers> iteratorD = DietList.listIterator();
-                while (iteratorD.hasNext()) {
-                    temp = iteratorD.next();
-                    if (temp.containsTrigger(trigger)) {
-                        exists = true;
-                    }
-                }
-            case "misc":
-                ListIterator<Triggers> iteratorM = MiscList.listIterator();
-                while (iteratorM.hasNext()) {
-                    temp = iteratorM.next();
-                    if (temp.containsTrigger(trigger)) {
-                        exists = true;
-                    }
-                }
-            default: Log.d("data", "list does not exist");
-        }
-
-        return exists;
-    }
-
-    public void addNewTrigger(String trigger, String list) {
-        Triggers temp = new Triggers (trigger, 0);
-        switch (list) {
-            case "activity":
-                ActivityList.add(temp);
-            case "diet":
-                DietList.add(temp);
-            case "misc":
-                MiscList.add(temp);
-            default: Log.d("data", "list does not exist");
-        }
-    }
-
-    public List<Triggers> getTriggerList (String list) {
-        switch (list) {
-            case "activity":
-                return ActivityList;
-            case "diet":
-                return DietList;
-            case "misc":
-                return MiscList;
-            default:
-                Log.d("data", "list does not exist");
-                return null;
-        }
-    }
-    public int getTriggerNum(String trigger, String list) {
-        int trig = -1;
-        Triggers temp = new Triggers();
-        switch (list) {
-            case "activity":
-                ListIterator<Triggers> iteratorA = ActivityList.listIterator();
-
-                while (iteratorA.hasNext()) {
-                    temp = iteratorA.next();
-                    if (temp.containsTrigger(trigger)) {
-                        trig = temp.getFreq();
-                    }
-                }
-            case "diet":
-                ListIterator<Triggers> iteratorD = DietList.listIterator();
-                while (iteratorD.hasNext()) {
-                    temp = iteratorD.next();
-                    if (temp.containsTrigger(trigger)) {
-                        trig = temp.getFreq();
-                    }
-                }
-            case "misc":
-                ListIterator<Triggers> iteratorM = MiscList.listIterator();
-                while (iteratorM.hasNext()) {
-                    temp = iteratorM.next();
-                    if (temp.containsTrigger(trigger)) {
-                        trig = temp.getFreq();
-                    }
-                }
-            default:
-                Log.d("data", "Error, list does not exist");
-        }
-        return trig;
-    }
-
-    public void setTriggerNum(String trigger, int num, String list) {
-       Triggers temp = new Triggers();
-       switch(list) {
-           case "activity":
-               ListIterator<Triggers> iteratorA = ActivityList.listIterator();
-               while (iteratorA.hasNext()) {
-                   temp = iteratorA.next();
-                   if (temp.containsTrigger(trigger)) {
-                       temp.setFreq(num);
-                       iteratorA.set(temp);
-                   }
-               }
-           case "Diet":
-               ListIterator<Triggers> iteratorD = DietList.listIterator();
-               while (iteratorD.hasNext()) {
-                   temp = iteratorD.next();
-                   if (temp.containsTrigger(trigger)) {
-                       temp.setFreq(num);
-                       iteratorD.set(temp);
-                   }
-               }
-           case "Misc":
-               ListIterator<Triggers> iteratorM = ActivityList.listIterator();
-               while (iteratorM.hasNext()) {
-                   temp = iteratorM.next();
-                   if (temp.containsTrigger(trigger)) {
-                       temp.setFreq(num);
-                       iteratorM.set(temp);
-                   }
-               }
-           default:
-               Log.d("data", "Error, list does not exist");
-       }
-    }
-}
-
-class Triggers {
-    private String trigger;
-    private int freq;
-
-    public Triggers () {
-        //default constructor
-        trigger = "";
-        freq = 0;
-    }
-
-    public Triggers (String trigger, int freq) {
-        this.trigger = trigger;
-        this.freq = freq;
-    }
-
-    public void setFreq (int freq) {
-        this.freq = freq;
-    }
-
-    public int getFreq () {
-        return freq;
-    }
-
-    public boolean containsTrigger (String trigger) {
-        if (this.trigger == trigger) { return true; }
-        else { return false; }
-    }
-}
 
 class FlareDatabaseAbstract {
     private Timestamp start;
@@ -248,23 +73,21 @@ class FlareDatabaseAbstract {
 }
 
 public class FlareClass {
-    private List<Integer> pain_nums;
+    private List<String> pain_Nums;
     private List<String> times;
     private List<String> triggers;
     private String dbId;
 
     public FlareClass() {
         //Default constructor to retrieve class object
-        pain_nums = new ArrayList<>();
+        pain_Nums = new ArrayList<>();
         times = new ArrayList<>();
         triggers = new ArrayList<>();
         dbId = "";
     }
 
-    public void UpdateFlare(Integer pain, Timestamp time, String dbID, List<String> triggers) {
-        //Timestamp toString defaults to YYYY-MM-DD HH:MM:SS.ff where
-        //ff is nanoseconds.
-        pain_nums.add(pain);
+    public void UpdateFlare (String painNum, Timestamp time, String dbID, List<String> triggers){
+        pain_Nums.add(painNum);
         times.add(time.toString());
         dbId = dbID;
         int size = triggers.size();
@@ -274,34 +97,22 @@ public class FlareClass {
         }
     }
 
-    //get flare from database using ID and update it with the new numbers
-    public FlareClass UpdateFlare (FlareClass flare, int pain, Timestamp time){
-        flare.pain_nums.add(pain);
-        flare.times.add(time.toString());
-        return flare;
-    }
-
-    public FlareClass UpdateFlare (FlareClass flare, int pain, Timestamp time, List<String> triggers){
-        flare.pain_nums.add(pain);
-        flare.times.add(time.toString());
-        int size = triggers.size();
-        while(size > 0) {
-            size = size - 1;
-            this.triggers.add(triggers.get(size));
-        }
-        return flare;
-    }
-
-    public List<Integer> getPain_Nums () {
-        return pain_nums;
+    public List<String> getPain_Nums () {
+        if (pain_Nums != null)
+            return pain_Nums;
+        return null;
     }
 
     public List<String> getTimes () {
-        return times;
+        if (times != null)
+            return times;
+        return null;
     }
 
     public List<String> getTriggers () {
-        return triggers;
+        if (triggers != null)
+            return triggers;
+        return null;
     }
 
     public void setDbId (String dbId) {

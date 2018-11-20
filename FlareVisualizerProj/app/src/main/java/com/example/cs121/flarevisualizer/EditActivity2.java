@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -22,32 +23,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
+public class EditActivity2 extends HomeActivity {
 
-/*
- *  To do: Add an update flare and end flare button. On updating, retrieve the database object, update
- *  it with new info, and push it back.
- *  Ending requires no new info. On ending a flare, the most recent flare will be retrieved and we'll
- *  calculate the average pain and get the length of the flare. Both of these numbers, along with the
- *  start and end times will be stored in a general flare object and will be pushed to a database
- *  reference of that object type.
- *
- */
-public class EditActivity extends HomeActivity {
-
-    private String[] months = {"M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    private String[] days = new String[32];
-    private String[] years = new String[21];
-    private String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    private String[] meridiem = {"A.M.", "P.M."};
     private String[] painRating = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 
-    private Spinner monthSpinner;
-    private Spinner daySpinner;
-    private Spinner yearSpinner;
-    private Spinner hourSpinner;
-    private Spinner meridiemSpinner;
     private Spinner painRatingSpinner;
 
     private LinearLayout theTriggerLayout;
@@ -66,8 +50,7 @@ public class EditActivity extends HomeActivity {
         super.onCreate(savedInstanceState);
 
         FrameLayout contentFrameLayout = (FrameLayout) findViewById(R.id.content_frame);
-        getLayoutInflater().inflate(R.layout.activity_edit, contentFrameLayout);
-
+        getLayoutInflater().inflate(R.layout.activity_edit2, contentFrameLayout);
 
         //set up database reference
         mDatabase = FirebaseDatabase.getInstance();
@@ -77,59 +60,25 @@ public class EditActivity extends HomeActivity {
         entryReferenceDiet = mDatabase.getReference().child("Diet");
         entryReferenceMisc = mDatabase.getReference().child("Misc");
 
-        monthSpinner = findViewById(R.id.monthSpinner);
-        daySpinner = findViewById(R.id.daySpinner);
-        yearSpinner = findViewById(R.id.yearSpinner);
-        hourSpinner = findViewById(R.id.hourSpinner);
-        meridiemSpinner = findViewById(R.id.meridiemSpinner);
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
+        ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, painRating);
+        painRatingSpinner.setAdapter(painRatingAdapter);
 
         theTriggerLayout = findViewById(R.id.editTriggerLayout);
 
-        populateDaysAndYears();
         setSpinners();
     }
 
-    private void populateDaysAndYears() {
-        days[0] = "D";
-        for (int index = 1; index <= 31; ++index){
-            days[index] = "" + index;
-        }
-
-        years[0] = "Y";
-        for (int index = 1; index < 21; ++index){
-            years[index] = "" + (2019 - index);
-        }
-    }
 
     private void setSpinners() {
-        ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, months);
-        monthSpinner.setAdapter(monthAdapter);
-
-        ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, days);
-        daySpinner.setAdapter(dayAdapter);
-
-        ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, years);
-        yearSpinner.setAdapter(yearAdapter);
-
-        ArrayAdapter<String> hourAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, hours);
-        hourSpinner.setAdapter(hourAdapter);
-
-        ArrayAdapter<String> meridiemAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, meridiem);
-        meridiemSpinner.setAdapter(meridiemAdapter);
-
         ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, painRating);
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
 
-    public void getOldInfo(View view) {
+    /*public void getOldInfo(View view) {
         // currently does nothing because of lack of database
         // month, day, year, hour, and meridiem spinners must be set to work
         // if not set, return error message/toaster
@@ -144,42 +93,21 @@ public class EditActivity extends HomeActivity {
 
             toast.show();
         }
-    }
+    }*/
 
     public void submitNewInfo(View view) {
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
 
-        //NOTE: when using database, can find entries more efficiently via timestamp
-        //NOTE: current contents are placeholders for when database is substituted in
-        // get the index of the new entry and make a key for it
-
-        /*if (monthSpinner.getSelectedItemPosition() <= 0 ||
-                daySpinner.getSelectedItemPosition() <= 0 ||
-                yearSpinner.getSelectedItemPosition() <= 0) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "All fields must be filled out before submitting.",
-                    Toast.LENGTH_SHORT);
-
-            toast.show();
-            return;
-        }*/
-
-
         //instead of using the spinners (to be removed, sorry!), get the
         //timestamp of the current time
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String pain = painRatingSpinner.getSelectedItem().toString();
-
         FlareClass flareC = new FlareClass();
         List<String> trig = new ArrayList<>();
 
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
-
-        int actIndex = pref.getInt("actIndex", -1);
-        int dietIndex = pref.getInt("dietIndex", -1);
-        int miscIndex = pref.getInt("miscIndex", -1);
 
         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
             View row = theTriggerLayout.getChildAt(i);
@@ -189,31 +117,17 @@ public class EditActivity extends HomeActivity {
             String rowType = rowSpinner.getSelectedItem().toString();
             String rowName = rowEdit.getText().toString().trim();
 
-            triggers.add(rowName);
-
             if(!rowName.matches("")){
                 //get trigger strings to add to the flare objects
                 trig.add(rowName);
-                String triggerData = monthSpinner.getSelectedItem().toString() + "/" +
-                        daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
-                        hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem()
-                        + " - " + rowName;
 
                 if (rowType.equals("Act.")){
                     entryReferenceActivity.child(rowName).setValue(0);
-                    ++actIndex;
-                    rowType += actIndex;
                 } else if (rowType.equals("Diet")) {
                     entryReferenceDiet.child(rowName).setValue(0);
-                    ++dietIndex;
-                    rowType += dietIndex;
                 } else {
                     entryReferenceMisc.child(rowName).setValue(0);
-                    ++miscIndex;
-                    rowType += miscIndex;
                 }
-
-                editor.putString(rowType, triggerData);
             }
         }
 
@@ -221,10 +135,7 @@ public class EditActivity extends HomeActivity {
         flareC.UpdateFlare(pain, time, flare, trig);
         entryReferenceFlare.child(flare).setValue(flareC);
 
-
-        editor.putInt("actIndex", actIndex);
-        editor.putInt("dietIndex", dietIndex);
-        editor.putInt("miscIndex", miscIndex);
+        editor.putInt("maxIndex", index);
 
         editor.commit();
 
