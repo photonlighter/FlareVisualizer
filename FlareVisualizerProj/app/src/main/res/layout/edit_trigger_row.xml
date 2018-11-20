@@ -9,7 +9,11 @@
         android:layout_height="45dp"
         android:layout_weight="1"
         android:entries="@array/triggerTypes"
-        android:textSize="20sp" />
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
+        android:spinnerMode="dropdown"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/triggerName"
@@ -18,7 +22,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="Trigger Name"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:inputType="textPersonName" />
 
     <Button
