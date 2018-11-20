@@ -170,15 +170,12 @@ public class EditActivity extends HomeActivity {
         //timestamp of the current time
         Timestamp time = new Timestamp(System.currentTimeMillis());
         String pain = painRatingSpinner.getSelectedItem().toString();
+
         FlareClass flareC = new FlareClass();
         List<String> trig = new ArrayList<>();
 
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
-        String flareData = monthSpinner.getSelectedItem().toString() + "/" +
-                daySpinner.getSelectedItem() + "/" + yearSpinner.getSelectedItem() + ", " +
-                hourSpinner.getSelectedItem() + " " + meridiemSpinner.getSelectedItem() +
-                " - pain rating " + painRatingSpinner.getSelectedItem();
 
         int actIndex = pref.getInt("actIndex", -1);
         int dietIndex = pref.getInt("dietIndex", -1);
@@ -191,6 +188,8 @@ public class EditActivity extends HomeActivity {
 
             String rowType = rowSpinner.getSelectedItem().toString();
             String rowName = rowEdit.getText().toString().trim();
+
+            triggers.add(rowName);
 
             if(!rowName.matches("")){
                 //get trigger strings to add to the flare objects
@@ -223,8 +222,6 @@ public class EditActivity extends HomeActivity {
         entryReferenceFlare.child(flare).setValue(flareC);
 
 
-        editor.putString(flare, flareData);
-        editor.putInt("maxIndex", index);
         editor.putInt("actIndex", actIndex);
         editor.putInt("dietIndex", dietIndex);
         editor.putInt("miscIndex", miscIndex);
