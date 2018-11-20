@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -49,6 +51,9 @@ public class EditActivity extends HomeActivity {
     private Spinner hourSpinner;
     private Spinner meridiemSpinner;
     private Spinner painRatingSpinner;
+
+    private CheckBox endFlare;
+    private boolean endFlareChecked;
 
     private LinearLayout theTriggerLayout;
 
@@ -84,6 +89,8 @@ public class EditActivity extends HomeActivity {
         meridiemSpinner = findViewById(R.id.meridiemSpinner);
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
 
+        endFlare = findViewById(R.id.endFlare);
+
         theTriggerLayout = findViewById(R.id.editTriggerLayout);
 
         populateDaysAndYears();
@@ -97,7 +104,7 @@ public class EditActivity extends HomeActivity {
         }
 
         years[0] = "Y";
-        for (int index = 1; index < 21; ++index){
+        for (int index = 1; index <= 20; ++index){
             years[index] = "" + (2019 - index);
         }
     }
@@ -128,6 +135,9 @@ public class EditActivity extends HomeActivity {
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
+    public void checkBoxClicked(View view) {
+        endFlareChecked = true;
+    }
 
     public void getOldInfo(View view) {
         // currently does nothing because of lack of database
@@ -224,7 +234,7 @@ public class EditActivity extends HomeActivity {
         flareC.UpdateFlare(pain, time, flare, trig);
         entryReferenceFlare.child(flare).setValue(flareC);
 
-
+        editor.putInt("maxIndex", index);
         editor.putInt("actIndex", actIndex);
         editor.putInt("dietIndex", dietIndex);
         editor.putInt("miscIndex", miscIndex);
@@ -246,41 +256,89 @@ public class EditActivity extends HomeActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 FlareClass flareC = dataSnapshot.getValue(FlareClass.class);
-                Timestamp time = new Timestamp(System.currentTimeMillis());
-                String pain = painRatingSpinner.getSelectedItem().toString();
-                List<String> trig = new ArrayList<>();
+                if (flareC == null) {
+                    Toast.makeText(getApplicationContext(), "Error, no flare to update", Toast.LENGTH_LONG);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                } else {
 
-                for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
-                    View row = theTriggerLayout.getChildAt(i);
-                    Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
-                    EditText rowEdit = row.findViewById(R.id.triggerName);
+                    String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
+                            + monthSpinner.getSelectedItem().toString() + "-"
+                            + daySpinner.getSelectedItem().toString() + " "
+                            + hourSpinner.getSelectedItem().toString() + ":"
+                            +"00:00.00";
+                    Timestamp time = Timestamp.valueOf(timeStamp);
 
-                    String rowType = rowSpinner.getSelectedItem().toString();
-                    String rowName = rowEdit.getText().toString().trim();
+                    String pain = painRatingSpinner.getSelectedItem().toString();
+                    List<String> trig = new ArrayList<>();
 
-                    if(!rowName.matches("")){
-                        //get trigger strings to add to the flare objects
-                        trig.add(rowName);
+                    for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+                        View row = theTriggerLayout.getChildAt(i);
+                        Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+                        EditText rowEdit = row.findViewById(R.id.triggerName);
 
-                        if (rowType.equals("Act.")){
-                            entryReferenceActivity.child(rowName).setValue(0);
-                        } else if (rowType.equals("Diet")) {
-                            entryReferenceDiet.child(rowName).setValue(0);
-                        } else {
-                            entryReferenceMisc.child(rowName).setValue(0);
+                        String rowType = rowSpinner.getSelectedItem().toString();
+                        String rowName = rowEdit.getText().toString().trim();
+
+                        if (!rowName.matches("")) {
+                            //get trigger strings to add to the flare objects
+                            trig.add(rowName);
+
+                            if (rowType.equals("Act.")) {
+                                entryReferenceActivity.child(rowName).setValue(0);
+                            } else if (rowType.equals("Diet")) {
+                                entryReferenceDiet.child(rowName).setValue(0);
+                            } else {
+                                entryReferenceMisc.child(rowName).setValue(0);
+                            }
                         }
                     }
+
+                    flareC.UpdateFlare(pain, time, flareN, trig);
+
+                    List<String> pains = flareC.getPain_Nums();
+                    List<String> times = flareC.getTimes();
+                    List<String> trigs = flareC.getTriggers();
+
+                    dataSnapshot.getRef().child("pain_Nums").setValue(pains);
+                    dataSnapshot.getRef().child("times").setValue(times);
+                    dataSnapshot.getRef().child("triggers").setValue(trigs);
+
+                    if (endFlareChecked) {
+                        //Add code to create the abstract database object from FlareClassAbstract
+                        entryReferenceFlare.child(flareN).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                FlareClass endFlare = dataSnapshot.getValue(FlareClass.class);
+                                //add methods to average pain, get the start and end times and length, and
+                                //update the triggers in lists with new frequency values
+                                List<String> pain_nums = endFlare.getPain_Nums();
+                                List<String> times = endFlare.getTimes();
+                                List<String> triggers = endFlare.getTriggers();
+                                String dbID = endFlare.getDbId();
+                                int average = getPainAvg(pain_nums);
+                                int length = getFlareLength(times);
+                                List<String> startAndEnd = getStartAndEnd(times);
+                                FlareDatabaseAbstract abstractFlare = new FlareDatabaseAbstract();
+                                abstractFlare.setAvg_pain(average);
+                                abstractFlare.setStartTime(startAndEnd.get(0));
+                                abstractFlare.setEndTime(startAndEnd.get(1));
+                                abstractFlare.setDbId(dbID);
+                                abstractFlare.setFlare_length(length);
+
+                                entryReferenceGeneral.child(dbID).setValue(abstractFlare);
+
+                                updateTriggerLists(triggers);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                Toast.makeText(getApplicationContext(), "Error ending flare", Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
                 }
-
-                flareC.UpdateFlare(pain, time, flareN, trig);
-
-                List <String> pains = flareC.getPain_Nums();
-                List<String> times = flareC.getTimes();
-                List<String> trigs = flareC.getTriggers();
-
-                dataSnapshot.getRef().child("pain_Nums").setValue(pains);
-                dataSnapshot.getRef().child("times").setValue(times);
-                dataSnapshot.getRef().child("triggers").setValue(trigs);
             }
 
             @Override
@@ -294,6 +352,51 @@ public class EditActivity extends HomeActivity {
         editor.commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+    }
+
+    public void updateTriggerLists(List<String> triggers) {
+        //Add code to update frequency of triggers in lists
+    }
+
+    public List<String> getStartAndEnd(List<String> times){
+        String temp = "";
+        List<String> result = new ArrayList<>();
+        if (times != null) {
+            temp = times.get(0);
+            result.add(temp);
+            temp = times.get(times.size()-1);
+            result.add(temp);
+        }
+        return result;
+    }
+
+    public int getPainAvg (List<String> pain_nums) {
+        int avg = 0;
+        if (pain_nums != null) {
+            int size = pain_nums.size();
+            while (size > 0) {
+                size = size - 1;
+                int num = Integer.valueOf(pain_nums.get(size));
+                avg = num + avg;
+            }
+            avg = avg/pain_nums.size();
+        }
+        return avg;
+    }
+
+    public int getFlareLength (List<String> times) {
+        Timestamp s;
+        Timestamp e;
+        int hours = 0;
+        long len = 0;
+        if (times != null) {
+            s = Timestamp.valueOf(times.get(1));
+            e = Timestamp.valueOf(times.get(times.size()-1));
+            len = e.getTime() - s.getTime();
+            int seconds = (int) len / 1000;
+            hours = seconds/3600;
+        }
+        return hours;
     }
 
     public void addTriggerField(View view) {

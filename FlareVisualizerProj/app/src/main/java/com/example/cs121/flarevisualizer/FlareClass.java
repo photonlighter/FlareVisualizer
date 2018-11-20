@@ -15,8 +15,8 @@ import java.util.ListIterator;
 import java.util.Map;
 
 class FlareDatabaseAbstract {
-    private Timestamp start;
-    private Timestamp end;
+    private String start;
+    private String end;
     private int avg_pain;
     private int flare_length;
     //this will be used to associate flares with the same id and get them easily
@@ -24,28 +24,34 @@ class FlareDatabaseAbstract {
 
     public FlareDatabaseAbstract() {
         //Default constructor to retrieve class object
+        start = "";
+        end = "";
+        avg_pain = 0;
+        flare_length = 0;
+        dbId = "";
+
     }
 
     public void addFlareDatabaseAbstract(Timestamp startDate, Timestamp endDate,
                                       int avg, int length, String dbID){
-        start = startDate;
-        end = endDate;
+        start = startDate.toString();
+        end = endDate.toString();
         avg_pain = avg;
         flare_length = length;
         dbId = dbID;
     }
 
-    public void setStartTime (Timestamp start) {
+    public void setStartTime (String start) {
         this.start = start;
     }
-    public Timestamp getStartTime () {
+    public String getStartTime () {
         return this.start;
     }
 
-    public void setEndTime (Timestamp end) {
+    public void setEndTime (String end) {
         this.end = end;
     }
-    public Timestamp getEndTime() {
+    public String getEndTime() {
         return end;
     }
 
