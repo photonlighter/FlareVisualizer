@@ -32,8 +32,8 @@
         <item name="android:background">@drawable/spinner_item_background</item>
     </style>
 
-    <style name="App.Style.Spinner" parent="@style/Widget.AppCompat.ListView.DropDown">
-        <item name="android:dividerHeight">10dip</item>
+    <style name="App.Style.Spinner" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:dividerHeight">0.5dip</item>
         <item name="android:divider">@android:color/black</item>
     </style>
 

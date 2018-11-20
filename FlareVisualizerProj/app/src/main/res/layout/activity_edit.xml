@@ -32,6 +32,7 @@
         style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/dateHeader"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,6 +59,7 @@
         style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/monthDaySlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,6 +85,7 @@
         style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/dayYearSlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,6 +112,7 @@
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
         android:textSize="16sp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/timeHeader"
         app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
@@ -135,6 +139,7 @@
             style="@style/SpinnerTheme"
             android:paddingLeft="4dp"
             android:paddingRight="30dp"
+            android:spinnerMode="dropdown"
             app:layout_constraintStart_toEndOf="@+id/hourText"
             app:layout_constraintTop_toTopOf="@+id/horizGuideline1" />
 
@@ -161,6 +166,7 @@
         style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
         app:layout_constraintTop_toTopOf="@+id/horizGuideline3" />
 
