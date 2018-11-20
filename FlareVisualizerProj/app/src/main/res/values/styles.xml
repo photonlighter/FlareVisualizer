@@ -13,6 +13,7 @@
         <item name="windowNoTitle">true</item>
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
         <item name="actionOverflowButtonStyle">@style/OverflowIcon</item>
+        <item name="android:dropDownListViewStyle">@style/App.Style.Spinner</item>
     </style>
 
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -29,6 +30,11 @@
 
     <style name="SpinnerTheme" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/spinner_item_background</item>
+    </style>
+
+    <style name="App.Style.Spinner" parent="@style/Widget.AppCompat.ListView.DropDown">
+        <item name="android:dividerHeight">10dip</item>
+        <item name="android:divider">@android:color/black</item>
     </style>
 
 </resources>

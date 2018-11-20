@@ -105,27 +105,27 @@ public class EditActivity extends HomeActivity {
 
     private void setSpinners() {
         ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, months);
+                android.R.layout.simple_spinner_item, months);
         monthSpinner.setAdapter(monthAdapter);
 
         ArrayAdapter<String> dayAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, days);
+                android.R.layout.simple_spinner_item, days);
         daySpinner.setAdapter(dayAdapter);
 
         ArrayAdapter<String> yearAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, years);
+                android.R.layout.simple_spinner_item, years);
         yearSpinner.setAdapter(yearAdapter);
 
         ArrayAdapter<String> hourAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, hours);
+                android.R.layout.simple_spinner_item, hours);
         hourSpinner.setAdapter(hourAdapter);
 
         ArrayAdapter<String> meridiemAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, meridiem);
+                android.R.layout.simple_spinner_item, meridiem);
         meridiemSpinner.setAdapter(meridiemAdapter);
 
         ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
-                R.layout.spinner_item, painRating);
+                android.R.layout.simple_spinner_item, painRating);
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 

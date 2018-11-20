@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/date_header"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,13 +26,15 @@
 
     <Spinner
         android:id="@+id/monthSpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         android:textSize="16sp"
-        android:background="@null"
         app:layout_constraintStart_toEndOf="@+id/dateHeader"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -42,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/date_slash"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/monthSpinner"
@@ -50,13 +52,15 @@
 
     <Spinner
         android:id="@+id/daySpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         android:textSize="16sp"
-        android:background="@null"
         app:layout_constraintStart_toEndOf="@+id/monthDaySlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -66,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/date_slash"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/daySpinner"
@@ -74,13 +78,15 @@
 
     <Spinner
         android:id="@+id/yearSpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         android:textSize="16sp"
-        android:background="@null"
         app:layout_constraintStart_toEndOf="@+id/dayYearSlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,7 +96,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/time_header"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +110,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textSize="16sp"
-        android:background="@null"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         app:layout_constraintStart_toEndOf="@+id/timeHeader"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -114,7 +122,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="@string/hour_text"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/hourSpinner"
@@ -122,13 +130,15 @@
 
     <Spinner
         android:id="@+id/meridiemSpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         android:textSize="16sp"
-        android:background="@null"
         app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
@@ -152,7 +162,9 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textSize="16sp"
-        android:background="@null"
+        style="@style/SpinnerTheme"
+        android:paddingLeft="4dp"
+        android:paddingRight="30dp"
         app:layout_constraintStart_toEndOf="@+id/hourText"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -183,14 +195,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.39" />
+        app:layout_constraintGuide_percent="0.5" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.26" />
+        app:layout_constraintGuide_percent="0.32" />
 
     <Button
         android:id="@+id/button"
