@@ -154,7 +154,7 @@ public class EditActivity extends HomeActivity {
         //NOTE: current contents are placeholders for when database is substituted in
         // get the index of the new entry and make a key for it
 
-        /*if (monthSpinner.getSelectedItemPosition() <= 0 ||
+        if (monthSpinner.getSelectedItemPosition() <= 0 ||
                 daySpinner.getSelectedItemPosition() <= 0 ||
                 yearSpinner.getSelectedItemPosition() <= 0) {
             Toast toast = Toast.makeText(getApplicationContext(),
@@ -163,12 +163,15 @@ public class EditActivity extends HomeActivity {
 
             toast.show();
             return;
-        }*/
+        }
 
+        String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
+                + monthSpinner.getSelectedItem().toString() + "-"
+                + daySpinner.getSelectedItem().toString() + " "
+                + hourSpinner.getSelectedItem().toString() + ":"
+                +"00:00.00";
+        Timestamp time = Timestamp.valueOf(timeStamp);
 
-        //instead of using the spinners (to be removed, sorry!), get the
-        //timestamp of the current time
-        Timestamp time = new Timestamp(System.currentTimeMillis());
         String pain = painRatingSpinner.getSelectedItem().toString();
 
         FlareClass flareC = new FlareClass();
@@ -189,7 +192,7 @@ public class EditActivity extends HomeActivity {
             String rowType = rowSpinner.getSelectedItem().toString();
             String rowName = rowEdit.getText().toString().trim();
 
-            triggers.add(rowName);
+            trig.add(rowName);
 
             if(!rowName.matches("")){
                 //get trigger strings to add to the flare objects
