@@ -1,6 +1,5 @@
 package com.example.cs121.flarevisualizer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
