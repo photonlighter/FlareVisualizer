@@ -97,9 +97,14 @@ public class FlareClass {
         times.add(time.toString());
         dbId = dbID;
         int size = triggers.size();
+        String temp;
         while(size > 0) {
             size = size - 1;
-            this.triggers.add(triggers.get(size));
+            temp = triggers.get(size);
+            //check if the trigger list of this flare already has a trigger "added"
+            if (!this.triggers.contains(temp)) {
+                this.triggers.add(temp);
+            }
         }
     }
 

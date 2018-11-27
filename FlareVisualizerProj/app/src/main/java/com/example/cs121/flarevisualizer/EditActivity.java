@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -54,6 +55,8 @@ public class EditActivity extends HomeActivity {
 
     private CheckBox endFlare;
     private boolean endFlareChecked;
+    String temp;
+    long avg;
 
     private LinearLayout theTriggerLayout;
 
@@ -174,11 +177,16 @@ public class EditActivity extends HomeActivity {
             toast.show();
             return;
         }
-
+        String hour = hourSpinner.getSelectedItem().toString();
+        int hourValue = Integer.valueOf(hour);
+        if ((meridiemSpinner.getSelectedItem().toString() == "P.M.")
+                && (hourValue != 12)){
+            hourValue = hourValue+12;
+        }
         String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
                 + monthSpinner.getSelectedItem().toString() + "-"
                 + daySpinner.getSelectedItem().toString() + " "
-                + hourSpinner.getSelectedItem().toString() + ":"
+                + String.valueOf(hourValue) + ":"
                 +"00:00.00";
         Timestamp time = Timestamp.valueOf(timeStamp);
 
@@ -250,7 +258,6 @@ public class EditActivity extends HomeActivity {
         SharedPreferences.Editor editor = pref.edit();
         int index = pref.getInt("maxIndex", -1);
         final String flareN = "flare" + index;
-
         entryReferenceFlare.child(flareN).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -262,11 +269,18 @@ public class EditActivity extends HomeActivity {
                     startActivity(intent);
                 } else {
 
+                    String hour = hourSpinner.getSelectedItem().toString();
+                    int hourValue = Integer.valueOf(hour);
+                    if ((meridiemSpinner.getSelectedItem().toString() == "P.M.")
+                            && (hourValue != 12)) {
+                        hourValue = hourValue+12;
+                    }
                     String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
                             + monthSpinner.getSelectedItem().toString() + "-"
                             + daySpinner.getSelectedItem().toString() + " "
-                            + hourSpinner.getSelectedItem().toString() + ":"
+                            + String.valueOf(hourValue) + ":"
                             +"00:00.00";
+
                     Timestamp time = Timestamp.valueOf(timeStamp);
 
                     String pain = painRatingSpinner.getSelectedItem().toString();
@@ -282,13 +296,15 @@ public class EditActivity extends HomeActivity {
 
                         if (!rowName.matches("")) {
                             //get trigger strings to add to the flare objects
-                            trig.add(rowName);
 
                             if (rowType.equals("Act.")) {
+                                trig.add(rowName);
                                 entryReferenceActivity.child(rowName).setValue(0);
                             } else if (rowType.equals("Diet")) {
+                                trig.add(rowName);
                                 entryReferenceDiet.child(rowName).setValue(0);
                             } else {
+                                trig.add(rowName);
                                 entryReferenceMisc.child(rowName).setValue(0);
                             }
                         }
@@ -329,7 +345,7 @@ public class EditActivity extends HomeActivity {
 
                                 entryReferenceGeneral.child(dbID).setValue(abstractFlare);
 
-                                updateTriggerLists(triggers);
+                                updateTriggerLists(triggers, average);
                             }
 
                             @Override
@@ -348,14 +364,44 @@ public class EditActivity extends HomeActivity {
 
         });
 
-
         editor.commit();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void updateTriggerLists(List<String> triggers) {
-        //Add code to update frequency of triggers in lists
+    public void updateTriggerLists(List<String> triggers, int average) {
+        Iterator<String> trig = triggers.iterator();
+        avg = average;
+        ValueEventListener list1, list2, list3;
+        list1 = getNewListener();
+        list2 = getNewListener();
+        list3 = getNewListener();
+        while (trig.hasNext()) {
+            temp = trig.next();
+            Log.d("lists", temp);
+            entryReferenceActivity.addListenerForSingleValueEvent(list1);
+            entryReferenceDiet.addListenerForSingleValueEvent(list2);
+            entryReferenceMisc.addListenerForSingleValueEvent(list3);
+        }
+    }
+
+    public ValueEventListener getNewListener() {
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(temp)) {
+                    long oldAvg = (long) dataSnapshot.child(temp).getValue();
+                    avg = avg+oldAvg;
+                    dataSnapshot.getRef().child(temp).setValue(avg);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getApplicationContext(), "Error updating trigger freq", Toast.LENGTH_LONG);
+            }
+        };
+        return listener;
     }
 
     public List<String> getStartAndEnd(List<String> times){
@@ -390,8 +436,8 @@ public class EditActivity extends HomeActivity {
         int hours = 0;
         long len = 0;
         if (times != null) {
-            s = Timestamp.valueOf(times.get(1));
-            e = Timestamp.valueOf(times.get(times.size()-1));
+            s = Timestamp.valueOf(times.get(0));
+            e = Timestamp.valueOf(times.get(1));
             len = e.getTime() - s.getTime();
             int seconds = (int) len / 1000;
             hours = seconds/3600;
