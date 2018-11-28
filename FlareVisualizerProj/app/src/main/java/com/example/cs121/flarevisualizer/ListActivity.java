@@ -55,7 +55,7 @@ public class ListActivity extends HomeActivity {
         //        layoutManager.getOrientation());
         //triggerList.addItemDecoration(divDecoration);
 
-
+        boolean flareDisplay = false;
         // fetch extras from the intent
         if (extras != null) {
             // type of trigger data that is being displayed; used for header
@@ -123,6 +123,7 @@ public class ListActivity extends HomeActivity {
                     //If we're here, then the triggerType in intent is a specific flare, not a list
                         flareDatabase = FirebaseDatabase.getInstance().getReference("Flares");
                         mDatabase = flareDatabase.child(triggerType);
+                        flareDisplay = true;
                         break;
             }
         }
@@ -133,17 +134,31 @@ public class ListActivity extends HomeActivity {
 
         //Example from https://www.youtube.com/watch?v=2duc77R4Hqw
         //Retrieve Data from Firebase DB
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
+        if (!flareDisplay) {
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showData(dataSnapshot);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        } else {
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showFlareData(dataSnapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
 
     }
 
@@ -161,4 +176,56 @@ public class ListActivity extends HomeActivity {
         triggerList.setAdapter(adapter);
     }
 
+    private void showFlareData (DataSnapshot dataSnapshot) {
+        List<String> list = new ArrayList<>();
+        String name;
+        List<String> pain = new ArrayList<>();
+        List<String> times = new ArrayList<>();
+        List<String> triggers = new ArrayList<>();
+        DataSnapshot data;
+        int size = 0;
+        int pos = 0;
+
+        data = dataSnapshot.child("pain_Nums");
+        for (DataSnapshot ds : data.getChildren()) {
+            name = (String) ds.getValue();
+            pain.add(name);
+        }
+        data = dataSnapshot.child("times");
+        for (DataSnapshot ds : data.getChildren()) {
+            name = (String) ds.getValue();
+            times.add(name);
+        }
+        data = dataSnapshot.child("triggers");
+        if (data != null) {
+            for (DataSnapshot ds : data.getChildren()) {
+                name = (String) ds.getValue();
+                triggers.add(name);
+            }
+        }
+        list.add(dataSnapshot.getKey());
+        list.add("Pain Numbers");
+        list = getDisplayList(list, pain);
+        list.add("Times");
+        list = getDisplayList(list, times);
+        list.add("Triggers");
+        list = getDisplayList(list, triggers);
+        // create adapter for list view to show Trigger List
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
+                list);
+        triggerList.setAdapter(adapter);
+    }
+
+    private List<String> getDisplayList (List<String> list, List<String> child) {
+        if (!child.isEmpty()) {
+            int size = child.size() - 1;
+            while (!child.isEmpty()) {
+                String temp = child.get(size);
+                list.add(temp);
+                child.remove(temp);
+                size = size-1;
+            }
+        }
+        return list;
+    }
 }
