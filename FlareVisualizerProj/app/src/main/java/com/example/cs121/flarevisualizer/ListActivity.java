@@ -1,7 +1,9 @@
 package com.example.cs121.flarevisualizer;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
@@ -23,6 +25,7 @@ public class ListActivity extends HomeActivity {
     private String triggerType = "";
 
     private DatabaseReference mDatabase;
+    private DatabaseReference flareDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,23 @@ public class ListActivity extends HomeActivity {
                 case "Miscellany":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Misc");
                     break;
+                case "Flares":
+                    mDatabase = FirebaseDatabase.getInstance().getReference("Flares");
+                    triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String temp = (String) adapterView.getItemAtPosition(i);
+                            Intent intent = new Intent(ListActivity.this, ListActivity.class);
+                            intent.putExtra("triggerType", temp);
+                            startActivity(intent);
+                        }
+                    });
+                    break;
+                default:
+                    //If we're here, then the triggerType in intent is a specific flare, not a list
+                        flareDatabase = FirebaseDatabase.getInstance().getReference("Flares");
+                        mDatabase = flareDatabase.child(triggerType);
+                        break;
             }
         }
 
@@ -75,19 +95,17 @@ public class ListActivity extends HomeActivity {
 
         //Example from https://www.youtube.com/watch?v=2duc77R4Hqw
         //Retrieve Data from Firebase DB
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                showData(dataSnapshot);
-            }
+            mDatabase.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    showData(dataSnapshot);
+                }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-
-
+                }
+            });
 
     }
 

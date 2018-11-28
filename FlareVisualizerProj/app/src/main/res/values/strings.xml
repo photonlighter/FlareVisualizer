@@ -23,6 +23,7 @@
     <string name="activity_button">Activity</string>
     <string name="misc_triggers_button">Misc</string>
     <string name="flare_edit_button">Flare Edit</string>
+    <string name="flare_display_button">Flares</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

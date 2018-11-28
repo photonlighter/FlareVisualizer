@@ -89,6 +89,12 @@ public class HomeActivity extends AppCompatActivity
             startActivity(intent);
             drawer.closeDrawers();
 
+        } else if (id==R.id.nav_flares) {
+            Intent intent = new Intent(this, ListActivity.class);
+            intent.putExtra("triggerType","Flares");
+            startActivity(intent);
+            drawer.closeDrawers();
+
         } else if (id == R.id.nav_flare_edit) {
             // Go to flare edit activity
             Intent intent = new Intent(this, EditActivity.class);

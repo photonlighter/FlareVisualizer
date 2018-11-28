@@ -94,10 +94,19 @@ public class FlareClass {
 
     public void UpdateFlare (String painNum, Timestamp time, String dbID, List<String> triggers){
         pain_Nums.add(painNum);
-        times.add(time.toString());
+        String temp;
+        Timestamp temp2;
+        if (times.size() > 0) {
+            //get the most recent timestamp in times
+            temp = times.get(times.size() - 1);
+            temp2 = Timestamp.valueOf(temp);
+            //if that timestamp is before the one being entered, enter it
+            if (temp2.before(time))
+                times.add(time.toString());
+        }
         dbId = dbID;
         int size = triggers.size();
-        String temp;
+        temp = "";
         while(size > 0) {
             size = size - 1;
             temp = triggers.get(size);
