@@ -1,4 +1,6 @@
 package com.example.cs121.flarevisualizer;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -86,18 +88,34 @@ public class ListActivity extends HomeActivity {
                     triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            String temp = (String) adapterView.getItemAtPosition(i);
-                            if (mDatabase.child(temp).getKey() != null) {
-                                mDatabase.child(temp).removeValue();
-                                if (flareDatabase.child(temp).getKey() != null) {
-                                    flareDatabase.child(temp).removeValue();
+                            final String temp = (String) adapterView.getItemAtPosition(i);
+                            AlertDialog.Builder alert = (new AlertDialog.Builder(ListActivity.this));
+                            alert.setTitle("Delete Flare:");
+                            alert.setMessage("Are you sure you want to delete?");
+                            alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    if (mDatabase.child(temp).getKey() != null) {
+                                        mDatabase.child(temp).removeValue();
+                                        if (flareDatabase.child(temp).getKey() != null) {
+                                            flareDatabase.child(temp).removeValue();
+                                        }
+                                        Toast.makeText(getApplicationContext(), "Flare removed", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Flare could not be removed", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                                Toast.makeText(getApplicationContext(), "Flare removed", Toast.LENGTH_LONG).show();
-                                return true;
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Flare could not be removed", Toast.LENGTH_LONG).show();
-                                return false;
-                            }
+                            });
+                            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                                    dialogInterface.dismiss();
+                                }
+                            });
+
+                            alert.show();
+                            return true;
                         }
                     });
                     break;
