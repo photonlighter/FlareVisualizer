@@ -9,6 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -71,6 +73,7 @@ public class ListActivity extends HomeActivity {
                     break;
                 case "Flares":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Flares");
+                    flareDatabase = FirebaseDatabase.getInstance().getReference("Abstract");
                     triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -78,6 +81,23 @@ public class ListActivity extends HomeActivity {
                             Intent intent = new Intent(ListActivity.this, ListActivity.class);
                             intent.putExtra("triggerType", temp);
                             startActivity(intent);
+                        }
+                    });
+                    triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String temp = (String) adapterView.getItemAtPosition(i);
+                            if (mDatabase.child(temp).getKey() != null) {
+                                mDatabase.child(temp).removeValue();
+                                if (flareDatabase.child(temp).getKey() != null) {
+                                    flareDatabase.child(temp).removeValue();
+                                }
+                                Toast.makeText(getApplicationContext(), "Flare removed", Toast.LENGTH_LONG).show();
+                                return true;
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Flare could not be removed", Toast.LENGTH_LONG).show();
+                                return false;
+                            }
                         }
                     });
                     break;
@@ -95,17 +115,17 @@ public class ListActivity extends HomeActivity {
 
         //Example from https://www.youtube.com/watch?v=2duc77R4Hqw
         //Retrieve Data from Firebase DB
-            mDatabase.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    showData(dataSnapshot);
-                }
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                showData(dataSnapshot);
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
+            }
+        });
 
     }
 
