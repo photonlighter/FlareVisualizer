@@ -179,8 +179,9 @@ public class EditActivity extends HomeActivity {
         }
         String hour = hourSpinner.getSelectedItem().toString();
         int hourValue = Integer.valueOf(hour);
-        if ((meridiemSpinner.getSelectedItem().toString() == "P.M.")
-                && (hourValue != 12)){
+        if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
+                && (hourValue != 12)) | ((meridiemSpinner.getSelectedItem().toString() == "A.M.")
+                && (hourValue == 12))){
             hourValue = hourValue+12;
         }
         String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
@@ -271,8 +272,9 @@ public class EditActivity extends HomeActivity {
 
                     String hour = hourSpinner.getSelectedItem().toString();
                     int hourValue = Integer.valueOf(hour);
-                    if ((meridiemSpinner.getSelectedItem().toString() == "P.M.")
-                            && (hourValue != 12)) {
+                    if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
+                            && (hourValue != 12))  | ((meridiemSpinner.getSelectedItem().toString() == "A.M.")
+                            && (hourValue == 12))) {
                         hourValue = hourValue+12;
                     }
                     String timeStamp = yearSpinner.getSelectedItem().toString() + "-"

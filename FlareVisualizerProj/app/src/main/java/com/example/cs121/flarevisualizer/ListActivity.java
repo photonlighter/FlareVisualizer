@@ -204,19 +204,37 @@ public class ListActivity extends HomeActivity {
             }
         }
         list.add(dataSnapshot.getKey());
-        list.add("Pain Numbers");
-        list = getDisplayList(list, pain);
-        list.add("Times");
-        list = getDisplayList(list, times);
-        list.add("Triggers");
-        list = getDisplayList(list, triggers);
+        list.add("PAIN REPORTS");
+        list = makePainAndTimeDisplay(list, pain, times);
+        list.add("TRIGGERS");
+        list = makeTriggerDisplay(list, triggers);
         // create adapter for list view to show Trigger List
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1,
                 list);
         triggerList.setAdapter(adapter);
     }
 
-    private List<String> getDisplayList (List<String> list, List<String> child) {
+    private List<String> makePainAndTimeDisplay (List<String> list, List<String> pain,
+                                          List<String> time) {
+        String times = "";
+        String painNums = "";
+        int pSize = pain.size();
+        int tSize = time.size();
+        while (!pain.isEmpty() && !time.isEmpty()) {
+            pSize = pSize-1;
+            tSize=tSize-1;
+            times = time.get(tSize);
+            painNums = pain.get(pSize);
+            String tempTime = "Time: " + times;
+            String tempPain = "     Pain: " + painNums;
+            list.add(tempTime);
+            list.add(tempPain);
+            time.remove(tSize);
+            pain.remove(pSize);
+        }
+        return list;
+    }
+    private List<String> makeTriggerDisplay (List<String> list, List<String> child) {
         if (!child.isEmpty()) {
             int size = child.size() - 1;
             while (!child.isEmpty()) {
