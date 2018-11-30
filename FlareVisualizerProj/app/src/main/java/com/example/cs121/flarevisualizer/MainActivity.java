@@ -87,21 +87,25 @@ public class MainActivity extends HomeActivity {
 
 
     private void getFlareData(DataSnapshot dataSnapshot) {
-        float painNumber;
+        String painNumber;
+        Float xNumber;
 
         DataSnapshot data;
         data = dataSnapshot.child("pain_Nums");
 
         int counter = 0;
         for (DataSnapshot ds : data.getChildren()) {
-            painNumber = ds.getValue(Float.class);
-            yVals.add(new Entry(counter, painNumber));
+            painNumber = (String) ds.getValue();
+
+            xNumber =  Float.valueOf(painNumber);
+            yVals.add(new Entry(counter, xNumber));
             counter++;
         }
 
         LineData flareData = setChartProperties(yVals);
         setupChart(mCharts[0], flareData, mColors[0]);
     }
+
 
     private void getAbstractData(DataSnapshot dataSnapshot) {
         Float avgPain = Float.valueOf(0);
