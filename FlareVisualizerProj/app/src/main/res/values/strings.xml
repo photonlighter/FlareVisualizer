@@ -25,6 +25,9 @@
     <string name="flare_edit_button">Flare Edit</string>
     <string name="flare_display_button">Flares</string>
 
+    <string name="most_recent_flare">Most Recent Flare</string>
+    <string name="abstract_flares">Abstract</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
