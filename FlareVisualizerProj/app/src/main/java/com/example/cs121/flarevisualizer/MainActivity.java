@@ -1,6 +1,7 @@
 package com.example.cs121.flarevisualizer;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
@@ -53,12 +54,18 @@ public class MainActivity extends HomeActivity {
 
 
     private void setupFlareData() {
+        SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
+        int index = pref.getInt("maxIndex", -1);
+        String flare = "flare" + index;
+
         flareDatabase = FirebaseDatabase.getInstance().getReference();
 
         //Get most recent Flares record
         //Query recentRecord = flareDatabase.child("Flares").orderByKey().limitToLast(1);
 
-        flareDatabase.child("Flares").orderByKey().limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
+        //the code was only listening for a change on the last child to update the data, not
+        //looking at
+        flareDatabase.child("Flares").child(flare).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 getFlareData(dataSnapshot);
@@ -92,14 +99,13 @@ public class MainActivity extends HomeActivity {
     private void getFlareData(DataSnapshot dataSnapshot) {
         float painNumber;
 
-        DataSnapshot data;
+        //DataSnapshot data = dataSnapshot.child("pain_Nums");
         FlareClass currFlare = dataSnapshot.getValue(FlareClass.class);
-        List<String>  painNums = currFlare.getPain_Nums();
 
+        List<String>  painNums = currFlare.getPain_Nums();
         int counter = 0;
         Iterator<String> iter = painNums.iterator();
         while (iter.hasNext()) {
-            Log.d("getFlareData", String.valueOf(counter));
             String temp = iter.next();
             painNumber = Float.parseFloat(temp);
             yVals.add(new Entry(counter, painNumber));
@@ -108,6 +114,7 @@ public class MainActivity extends HomeActivity {
 
         /*int counter = 0;
         for (DataSnapshot ds : data.getChildren()) {
+            Log.d("getFlareData", "there are pain numbers");
             painNumber = ds.getValue(Float.class);
             yVals.add(new Entry(counter, painNumber));
             counter++;
