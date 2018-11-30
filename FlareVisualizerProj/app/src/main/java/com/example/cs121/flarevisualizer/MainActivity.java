@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -19,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity extends HomeActivity {
 
@@ -90,14 +93,25 @@ public class MainActivity extends HomeActivity {
         float painNumber;
 
         DataSnapshot data;
-        data = dataSnapshot.child("pain_Nums");
+        FlareClass currFlare = dataSnapshot.getValue(FlareClass.class);
+        List<String>  painNums = currFlare.getPain_Nums();
 
         int counter = 0;
+        Iterator<String> iter = painNums.iterator();
+        while (iter.hasNext()) {
+            Log.d("getFlareData", String.valueOf(counter));
+            String temp = iter.next();
+            painNumber = Float.parseFloat(temp);
+            yVals.add(new Entry(counter, painNumber));
+            counter++;
+        }
+
+        /*int counter = 0;
         for (DataSnapshot ds : data.getChildren()) {
             painNumber = ds.getValue(Float.class);
             yVals.add(new Entry(counter, painNumber));
             counter++;
-        }
+        }*/
 
         LineData flareData = setChartProperties(yVals);
         setupChart(mCharts[0], flareData, mColors[0]);

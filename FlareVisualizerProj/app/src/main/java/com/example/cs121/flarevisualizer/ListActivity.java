@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,14 +198,28 @@ public class ListActivity extends HomeActivity {
             name = (String) ds.getValue();
             times.add(name);
         }
-        data = dataSnapshot.child("triggers");
+        data = dataSnapshot.child("actTriggers");
         if (data != null) {
             for (DataSnapshot ds : data.getChildren()) {
                 name = (String) ds.getValue();
                 triggers.add(name);
             }
         }
-        list.add(dataSnapshot.getKey());
+        data = dataSnapshot.child("dietTriggers");
+        if (data != null) {
+            for (DataSnapshot ds : data.getChildren()) {
+                name = (String) ds.getValue();
+                triggers.add(name);
+            }
+        }
+        data = dataSnapshot.child("miscTriggers");
+        if (data != null) {
+            for (DataSnapshot ds : data.getChildren()) {
+                name = (String) ds.getValue();
+                triggers.add(name);
+            }
+        }
+
         list.add("PAIN REPORTS");
         list = makePainAndTimeDisplay(list, pain, times);
         list.add("TRIGGERS");
@@ -225,10 +241,8 @@ public class ListActivity extends HomeActivity {
             tSize=tSize-1;
             times = time.get(tSize);
             painNums = pain.get(pSize);
-            String tempTime = "Time: " + times;
-            String tempPain = "     Pain: " + painNums;
+            String tempTime = "Reported pain " + times + painNums;
             list.add(tempTime);
-            list.add(tempPain);
             time.remove(tSize);
             pain.remove(pSize);
         }

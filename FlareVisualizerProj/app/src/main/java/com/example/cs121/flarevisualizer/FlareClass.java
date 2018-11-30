@@ -18,7 +18,6 @@ class FlareDatabaseAbstract {
     private String start;
     private String end;
     private int avg_pain;
-    private int flare_length;
     //this will be used to associate flares with the same id and get them easily
     private String dbId;
 
@@ -27,17 +26,15 @@ class FlareDatabaseAbstract {
         start = "";
         end = "";
         avg_pain = 0;
-        flare_length = 0;
         dbId = "";
 
     }
 
     public void addFlareDatabaseAbstract(Timestamp startDate, Timestamp endDate,
-                                      int avg, int length, String dbID){
+                                      int avg, String dbID){
         start = startDate.toString();
         end = endDate.toString();
         avg_pain = avg;
-        flare_length = length;
         dbId = dbID;
     }
 
@@ -62,13 +59,6 @@ class FlareDatabaseAbstract {
         return avg_pain;
     }
 
-    public void setFlare_length (int flare_length) {
-        this.flare_length = flare_length;
-    }
-    public int getFlare_length () {
-        return flare_length;
-    }
-
     public void setDbId (String dbId) {
         this.dbId = dbId;
     }
@@ -81,31 +71,29 @@ class FlareDatabaseAbstract {
 public class FlareClass {
     private List<String> pain_Nums;
     private List<String> times;
-    private List<String> triggers;
+    private List<String> actTriggers;
+    private List<String> dietTriggers;
+    private List<String> miscTriggers;
     private String dbId;
 
     public FlareClass() {
         //Default constructor to retrieve class object
         pain_Nums = new ArrayList<>();
         times = new ArrayList<>();
-        triggers = new ArrayList<>();
+        actTriggers = new ArrayList<>();
+        dietTriggers = new ArrayList<>();
+        miscTriggers = new ArrayList<>();
         dbId = "";
     }
 
-    public void UpdateFlare (String painNum, Timestamp time, String dbID, List<String> triggers){
+    public void UpdateFlare (String painNum, Timestamp time, String dbID, List<String> actTriggers,
+                             List<String> dietTriggers, List<String> miscTriggers){
         pain_Nums.add(painNum);
         times.add(time.toString());
         dbId = dbID;
-        int size = triggers.size();
-        String temp = "";
-        while(size > 0) {
-            size = size - 1;
-            temp = triggers.get(size);
-            //check if the trigger list of this flare already has a trigger "added"
-            if (!this.triggers.contains(temp)) {
-                this.triggers.add(temp);
-            }
-        }
+        setTrigList(this.actTriggers, actTriggers);
+        setTrigList(this.dietTriggers, dietTriggers);
+        setTrigList(this.miscTriggers, miscTriggers);
     }
 
     public List<String> getPain_Nums () {
@@ -120,9 +108,19 @@ public class FlareClass {
         return null;
     }
 
-    public List<String> getTriggers () {
-        if (triggers != null)
-            return triggers;
+    public List<String> getActTriggers () {
+        if (actTriggers != null)
+            return actTriggers;
+        return null;
+    }
+    public List<String> getDietTriggers () {
+        if (dietTriggers != null)
+            return dietTriggers;
+        return null;
+    }
+    public List<String> getMiscTriggers () {
+        if (actTriggers != null)
+            return miscTriggers;
         return null;
     }
 
@@ -131,5 +129,18 @@ public class FlareClass {
     }
     public String getDbId () {
         return dbId;
+    }
+
+    //private helper method to set each trigger list
+    private void setTrigList(List<String> currTrigs, List<String> newTrigs) {
+        String trig;
+        Iterator<String> iter = newTrigs.iterator();
+        while (iter.hasNext()) {
+            trig = iter.next();
+            if (!currTrigs.contains(trig)) {
+                currTrigs.add(trig);
+            }
+        }
+
     }
 }
