@@ -64,8 +64,6 @@ public class MainActivity extends HomeActivity {
         //Get most recent Flares record
         //Query recentRecord = flareDatabase.child("Flares").orderByKey().limitToLast(1);
 
-        //the code was only listening for a change on the last child to update the data, not
-        //looking at
         flareDatabase.child("Flares").child(flare).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -98,7 +96,7 @@ public class MainActivity extends HomeActivity {
 
 
     private void getFlareData(DataSnapshot dataSnapshot) {
-        float painNumber;
+        Float xNumber;
 
         //DataSnapshot data = dataSnapshot.child("pain_Nums");
         FlareClass currFlare = dataSnapshot.getValue(FlareClass.class);
@@ -110,18 +108,10 @@ public class MainActivity extends HomeActivity {
         Iterator<String> iter = painNums.iterator();
         while (iter.hasNext()) {
             String temp = iter.next();
-            painNumber = Float.parseFloat(temp);
-            yVals.add(new Entry(counter, painNumber));
+            xNumber = Float.parseFloat(temp);
+            yVals.add(new Entry(counter, xNumber));
             counter++;
         }
-
-        /*int counter = 0;
-        for (DataSnapshot ds : data.getChildren()) {
-            Log.d("getFlareData", "there are pain numbers");
-            painNumber = ds.getValue(Float.class);
-            yVals.add(new Entry(counter, painNumber));
-            counter++;
-        }*/
 
         LineData flareData = setChartProperties(yVals);
         setupChart(mCharts[0], flareData, mColors[0]);
