@@ -33,6 +33,7 @@ public class MainActivity extends HomeActivity {
     private DatabaseReference abstractDatabase;
 
     public ArrayList<Entry> yVals = new ArrayList<>();
+    public ArrayList<Entry> yValsAbstract = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,9 @@ public class MainActivity extends HomeActivity {
 
         //DataSnapshot data = dataSnapshot.child("pain_Nums");
         FlareClass currFlare = dataSnapshot.getValue(FlareClass.class);
-
+        if (currFlare == null) {
+            return;
+        }
         List<String>  painNums = currFlare.getPain_Nums();
         int counter = 0;
         Iterator<String> iter = painNums.iterator();
@@ -132,11 +135,11 @@ public class MainActivity extends HomeActivity {
         for (DataSnapshot ds : dataSnapshot.getChildren()) {
             data = ds.child("avg_pain");
             avgPain = data.getValue(Float.class);
-            yVals.add(new Entry(counter, avgPain));
+            yValsAbstract.add(new Entry(counter, avgPain));
             counter++;
         }
 
-        LineData abstractData = setChartProperties(yVals);
+        LineData abstractData = setChartProperties(yValsAbstract);
         setupChart(mCharts[1], abstractData, mColors[1]);
 
     }

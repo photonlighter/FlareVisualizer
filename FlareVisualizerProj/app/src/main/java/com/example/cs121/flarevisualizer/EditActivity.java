@@ -200,7 +200,7 @@ public class EditActivity extends HomeActivity {
         List<String> dietTrig = new ArrayList<>();
         List<String> miscTrig = new ArrayList<>();
 
-        int index = pref.getInt("maxIndex", -1);
+        int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
 
         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
@@ -349,10 +349,6 @@ public class EditActivity extends HomeActivity {
             }
 
         });
-        if (endFlareChecked) {
-            editor.putInt("maxIndex", index + 1);
-            endFlareChecked = false;
-        }
 
         editor.commit();
 
