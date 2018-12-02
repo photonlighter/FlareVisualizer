@@ -4,9 +4,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -19,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +30,6 @@ public class ListActivity extends HomeActivity {
 
     private ListView triggerList;
     private ListAdapter adapter;
-    //private String[] data;
     private String triggerType = "";
 
     private DatabaseReference mDatabase;
@@ -43,19 +45,8 @@ public class ListActivity extends HomeActivity {
         // get intent from main activity
         Bundle extras = getIntent().getExtras();
 
-        //String rowType = "Act.";
-
         // sets up the list of triggers
         triggerList = (ListView) findViewById(R.id.triggerList);
-
-        //triggerList.hasFixedSize();
-
-        //layoutManager = new LinearLayoutManager(this);
-        //triggerList.setLayoutManager(layoutManager);
-
-        //DividerItemDecoration divDecoration = new DividerItemDecoration(triggerList.getContext(),
-        //        layoutManager.getOrientation());
-        //triggerList.addItemDecoration(divDecoration);
 
         boolean flareDisplay = false;
         // fetch extras from the intent
@@ -68,12 +59,21 @@ public class ListActivity extends HomeActivity {
             switch (triggerType) {
                 case "Diet":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Diet");
+                    //long click - delete
+                    triggerLongClick();
+                    triggerShortClick();
                     break;
                 case "Activity":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Activity");
+                    //long click - delete
+                    triggerLongClick();
+                    triggerShortClick();
                     break;
                 case "Miscellany":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Misc");
+                    //long click - delete
+                    triggerLongClick();
+                    triggerShortClick();
                     break;
                 case "Flares":
                     mDatabase = FirebaseDatabase.getInstance().getReference("Flares");
@@ -162,6 +162,50 @@ public class ListActivity extends HomeActivity {
             });
         }
 
+    }
+
+    private void triggerShortClick() {
+        triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String triggerTypeValue = (String) adapterView.getItemAtPosition(i);
+                showUpdateDialog(triggerTypeValue, triggerType);
+            }
+        });
+    }
+
+    //Long Click Listener Code for Triggers
+    private void triggerLongClick() {
+        triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String temp = (String) adapterView.getItemAtPosition(i);
+                AlertDialog.Builder alert = (new AlertDialog.Builder(ListActivity.this));
+                alert.setTitle("Delete Trigger:");
+                alert.setMessage("Are you sure you want to delete?");
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mDatabase.child(temp).getKey() != null) {
+                            mDatabase.child(temp).removeValue();
+                            Toast.makeText(getApplicationContext(), "Trigger removed", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Trigger could not be removed", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alert.show();
+                return true;
+            }
+        });
     }
 
     // Obtain snapshot and send list to view
@@ -259,5 +303,66 @@ public class ListActivity extends HomeActivity {
             }
         }
         return list;
+    }
+
+    // Taken from https://www.youtube.com/watch?v=2bYWf0z8_8s
+    private void showUpdateDialog(final String triggerName, final String triggerType) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.update_trigger_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final EditText editTextName = (EditText) dialogView.findViewById(R.id.edit_trigger_text);
+        final Button buttonUpdate = (Button) dialogView.findViewById(R.id.update_trigger_button);
+        final Button buttonCancel = (Button) dialogView.findViewById(R.id.cancel_trigger_button);
+
+        editTextName.setText(triggerName);
+        dialogBuilder.setTitle("Update Trigger: " + triggerName);
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newName = editTextName.getText().toString().trim();
+
+                if (TextUtils.isEmpty(newName)) {
+                    editTextName.setError("Trigger name required");
+                    return;
+                }
+
+                updateTrigger(triggerName, triggerType, newName);
+                alertDialog.dismiss();
+            }
+        });
+
+        buttonCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                alertDialog.dismiss();
+            }
+        });
+    }
+
+    // Taken from https://www.youtube.com/watch?v=2bYWf0z8_8s
+    private boolean updateTrigger(String triggerName, String triggerType, String newTriggerName) {
+        switch (triggerType) {
+            case "Diet":
+                mDatabase = FirebaseDatabase.getInstance().getReference("Diet");
+                break;
+            case "Activity":
+                mDatabase = FirebaseDatabase.getInstance().getReference("Activity");
+                break;
+            case "Miscellany":
+                mDatabase = FirebaseDatabase.getInstance().getReference("Misc");
+                break;
+        }
+        // remove old trigger name
+        mDatabase.child(triggerName).removeValue();
+        // add new trigger name
+        mDatabase.child(newTriggerName).setValue(0);
+        Toast.makeText(this, "Trigger Updated Successfully", Toast.LENGTH_LONG).show();
+        return true;
     }
 }
