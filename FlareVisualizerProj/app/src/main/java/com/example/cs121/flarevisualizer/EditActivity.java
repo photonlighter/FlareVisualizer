@@ -55,10 +55,7 @@ public class EditActivity extends HomeActivity {
     private Spinner meridiemSpinner;
     private Spinner painRatingSpinner;
 
-    private CheckBox endFlare;
-    private boolean endFlareChecked;
-    String temp;
-    long avg;
+    private CheckBox endFlareBox;
 
     private LinearLayout theTriggerLayout;
 
@@ -70,6 +67,7 @@ public class EditActivity extends HomeActivity {
     private DatabaseReference entryReferenceDiet;
     private DatabaseReference entryReferenceMisc;
 
+    boolean endFlare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +84,7 @@ public class EditActivity extends HomeActivity {
         entryReferenceActivity = mDatabase.getReference().child("Activity");
         entryReferenceDiet = mDatabase.getReference().child("Diet");
         entryReferenceMisc = mDatabase.getReference().child("Misc");
+        endFlare = false;
 
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
@@ -94,9 +93,9 @@ public class EditActivity extends HomeActivity {
         meridiemSpinner = findViewById(R.id.meridiemSpinner);
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
 
-        endFlare = findViewById(R.id.endFlare);
-
         theTriggerLayout = findViewById(R.id.editTriggerLayout);
+
+        endFlareBox = findViewById(R.id.endFlare);
 
         populateDaysAndYears();
         setSpinners();
@@ -141,33 +140,17 @@ public class EditActivity extends HomeActivity {
     }
 
     public void checkBoxClicked(View view) {
-        endFlareChecked = true;
-    }
-
-    public void getOldInfo(View view) {
-        // currently does nothing because of lack of database
-        // month, day, year, hour, and meridiem spinners must be set to work
-        // if not set, return error message/toaster
-        // if set and old info exists, populate pain rating
-        // if set and old info doesn't exist, do nothing
-        if (monthSpinner.getSelectedItemPosition() <= 0 ||
-                daySpinner.getSelectedItemPosition() <= 0 ||
-                yearSpinner.getSelectedItemPosition() <= 0) {
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "All date and time fields must be filled out before submitting.",
-                    Toast.LENGTH_SHORT);
-
-            toast.show();
+        boolean checked = ((CheckBox) view).isChecked();
+        if (view.getId() == R.id.endFlare) {
+            if (checked) {
+                endFlare = true;
+            }
         }
     }
 
     public void submitNewInfo(View view) {
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-
-        //NOTE: when using database, can find entries more efficiently via timestamp
-        //NOTE: current contents are placeholders for when database is substituted in
-        // get the index of the new entry and make a key for it
 
         if (monthSpinner.getSelectedItemPosition() <= 0 ||
                 daySpinner.getSelectedItemPosition() <= 0 ||
@@ -220,13 +203,16 @@ public class EditActivity extends HomeActivity {
 
                 if (rowType.equals("Act.")){
                     actTrig.add(rowName);
-                    //entryReferenceActivity.child(rowName).setValue(0);
+                    entryReferenceActivity.child(rowName).child(flare).setValue(0);
+                    //updateTriggerFreq(entryReferenceActivity);
                 } else if (rowType.equals("Diet")) {
                     dietTrig.add(rowName);
-                    //entryReferenceDiet.child(rowName).setValue(0);
+                    entryReferenceDiet.child(rowName).child(flare).setValue(0);
+                    //updateTriggerFreq(entryReferenceDiet);
                 } else {
                     miscTrig.add(rowName);
-                    //entryReferenceMisc.child(rowName).setValue(0);
+                    entryReferenceMisc.child(rowName).child(flare).setValue(0);
+                    //updateTriggerFreq(entryReferenceMisc);
                 }
 
             }
@@ -241,11 +227,25 @@ public class EditActivity extends HomeActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void updateInfo(View view) {
+
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
+
+        if (monthSpinner.getSelectedItemPosition() <= 0 ||
+                daySpinner.getSelectedItemPosition() <= 0 ||
+                yearSpinner.getSelectedItemPosition() <= 0) {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "All fields must be filled out before submitting.",
+                    Toast.LENGTH_SHORT);
+
+            toast.show();
+            return;
+        }
+
         int index = pref.getInt("maxIndex", -1);
         final String flareN = "flare" + index;
         entryReferenceFlare.child(flareN).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -257,6 +257,7 @@ public class EditActivity extends HomeActivity {
                     Toast.makeText(getApplicationContext(), "Error, no flare to update", Toast.LENGTH_LONG);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
 
                     String hour = hourSpinner.getSelectedItem().toString();
@@ -292,13 +293,10 @@ public class EditActivity extends HomeActivity {
 
                             if (rowType.equals("Act.")) {
                                 actTrig.add(rowName);
-                                entryReferenceActivity.child(rowName).setValue(0);
                             } else if (rowType.equals("Diet")) {
                                 dietTrig.add(rowName);
-                                entryReferenceDiet.child(rowName).setValue(0);
                             } else {
                                 miscTrig.add(rowName);
-                                entryReferenceMisc.child(rowName).setValue(0);
                             }
                         }
                     }
@@ -329,16 +327,22 @@ public class EditActivity extends HomeActivity {
                     Iterator<String> trigIter = actTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
+                        entryReferenceActivity.child(temp).child(dbID).setValue(average);
+                        updateTriggerFreq(entryReferenceActivity);
                     }
 
                     trigIter = dietTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
+                        entryReferenceDiet.child(temp).child(dbID).setValue(average);
+                        updateTriggerFreq(entryReferenceDiet);
                     }
 
                     trigIter = miscTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
+                        entryReferenceMisc.child(temp).child(dbID).setValue(average);
+                        updateTriggerFreq(entryReferenceMisc);
                     }
                 }
             }
@@ -350,52 +354,14 @@ public class EditActivity extends HomeActivity {
 
         });
 
+        endFlare = false;
+
         editor.commit();
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        finish();
     }
-
-   /* public void updateTriggerLists(List<String> triggers, int average) {
-        Iterator<String> trig = triggers.iterator();
-        avg = average;
-        ValueEventListener list1, list2, list3;
-        list1 = getNewListener();
-        list2 = getNewListener();
-        list3 = getNewListener();
-        while (trig.hasNext()) {
-            temp = trig.next();
-            Log.d("lists", temp);
-            entryReferenceActivity.addListenerForSingleValueEvent(list1);
-            entryReferenceDiet.addListenerForSingleValueEvent(list2);
-            entryReferenceMisc.addListenerForSingleValueEvent(list3);
-        }
-    } */
-
-   /*public void updateTriggerLists(DataSnapshot dataSnapshot) {
-       FlareDatabaseAbstract flare = dataSnapshot.getValue(FlareDatabaseAbstract.class);
-       List<String> trigs = flare.getFlare_triggers();
-
-   }
-
-    public ValueEventListener getNewListener() {
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(temp)) {
-                    long oldAvg = (long) dataSnapshot.child(temp).getValue();
-                    avg = avg+oldAvg;
-                    dataSnapshot.getRef().child(temp).setValue(avg);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Error updating trigger freq", Toast.LENGTH_LONG);
-            }
-        };
-        return listener;
-    }*/
 
     public List<String> getStartAndEnd(List<String> times){
         String temp = "";
@@ -423,6 +389,32 @@ public class EditActivity extends HomeActivity {
         return avg;
     }
 
+    public void updateTriggerFreq(DatabaseReference triggerRef) {
+        triggerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int freq;
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    freq = 0;
+                    ds.getRef().child("freq").setValue(0);
+                    for (DataSnapshot snap : ds.getChildren()) {
+                        if (!snap.getKey().equals("freq")) {
+                            int currFreq = snap.getValue(Integer.class);
+                            freq = currFreq + freq;
+                        }
+                    }
+                    ds.getRef().child("freq").setValue(freq);
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     public void addTriggerField(View view) {
         LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View newField = null;
@@ -436,4 +428,3 @@ public class EditActivity extends HomeActivity {
         theTriggerLayout.removeView((View)view.getParent());
     }
 }
-
