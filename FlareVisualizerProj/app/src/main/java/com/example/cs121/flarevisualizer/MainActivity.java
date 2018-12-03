@@ -108,9 +108,11 @@ public class MainActivity extends HomeActivity {
         Iterator<String> iter = painNums.iterator();
         while (iter.hasNext()) {
             String temp = iter.next();
-            xNumber = Float.parseFloat(temp);
-            yVals.add(new Entry(counter, xNumber));
-            counter++;
+            if (temp != null) {
+                xNumber = Float.parseFloat(temp);
+                yVals.add(new Entry(counter, xNumber));
+                counter++;
+            }
         }
 
         LineData flareData = setChartProperties(yVals);

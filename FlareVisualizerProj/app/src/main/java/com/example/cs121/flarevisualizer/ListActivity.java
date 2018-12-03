@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,13 +27,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ListActivity extends HomeActivity {
 
     private ListView triggerList;
     private ListAdapter adapter;
-    //private String[] data;
     private String triggerType = "";
+    private int triggerStart;
+    private int actEnd;
+    private int dietEnd;
+    private int miscEnd;
+    private int painPos;
+
+    private List<String> pain;
+    private List<String> times;
+    private List<String> triggers;
 
     private DatabaseReference mDatabase;
     private DatabaseReference flareDatabase;
@@ -47,19 +57,7 @@ public class ListActivity extends HomeActivity {
         // get intent from main activity
         Bundle extras = getIntent().getExtras();
 
-        //String rowType = "Act.";
-
-        // sets up the list of triggers
         triggerList = (ListView) findViewById(R.id.triggerList);
-
-        //triggerList.hasFixedSize();
-
-        //layoutManager = new LinearLayoutManager(this);
-        //triggerList.setLayoutManager(layoutManager);
-
-        //DividerItemDecoration divDecoration = new DividerItemDecoration(triggerList.getContext(),
-        //        layoutManager.getOrientation());
-        //triggerList.addItemDecoration(divDecoration);
 
         boolean flareDisplay = false;
         // fetch extras from the intent
@@ -135,6 +133,7 @@ public class ListActivity extends HomeActivity {
                     //If we're here, then the triggerType in intent is a specific flare, not a list
                     flareDatabase = FirebaseDatabase.getInstance().getReference("Flares");
                     mDatabase = flareDatabase.child(triggerType);
+                    //setFlareLongClick();
                     flareDisplay = true;
                     break;
             }
@@ -170,7 +169,6 @@ public class ListActivity extends HomeActivity {
         header.setText(getString(R.string.trigger_list, triggerType));
 
     }
-
     private void triggerShortClick() {
         triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -291,12 +289,10 @@ public class ListActivity extends HomeActivity {
     private void showFlareData (DataSnapshot dataSnapshot) {
         List<String> list = new ArrayList<>();
         String name;
-        List<String> pain = new ArrayList<>();
-        List<String> times = new ArrayList<>();
-        List<String> triggers = new ArrayList<>();
+        pain = new ArrayList<>();
+        times = new ArrayList<>();
+        triggers = new ArrayList<>();
         DataSnapshot data;
-        int size = 0;
-        int pos = 0;
 
         data = dataSnapshot.child("pain_Nums");
         for (DataSnapshot ds : data.getChildren()) {
@@ -315,6 +311,8 @@ public class ListActivity extends HomeActivity {
                 triggers.add(name);
             }
         }
+        actEnd = triggers.size();
+
         data = dataSnapshot.child("dietTriggers");
         if (data != null) {
             for (DataSnapshot ds : data.getChildren()) {
@@ -322,6 +320,8 @@ public class ListActivity extends HomeActivity {
                 triggers.add(name);
             }
         }
+        dietEnd = triggers.size();
+
         data = dataSnapshot.child("miscTriggers");
         if (data != null) {
             for (DataSnapshot ds : data.getChildren()) {
@@ -329,9 +329,16 @@ public class ListActivity extends HomeActivity {
                 triggers.add(name);
             }
         }
+        miscEnd = triggers.size();
+
+        //this is the location of the last pain/time report
+        painPos = pain.size();
 
         list.add("PAIN REPORTS");
         list = makePainAndTimeDisplay(list, pain, times);
+
+        //this is the start of the triggers in the display
+        triggerStart = painPos + 1;
         list.add("TRIGGERS");
         list = makeTriggerDisplay(list, triggers);
         // create adapter for list view to show Trigger List
@@ -340,32 +347,103 @@ public class ListActivity extends HomeActivity {
         triggerList.setAdapter(adapter);
     }
 
+    /*private void setFlareLongClick() {
+        triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                final String item = (String) adapterView.getItemAtPosition(i);
+                if (item.equals("TRIGGERS") | item.equals("PAIN REPORTS")) {
+                    return false;
+                }
+                final int pos = i;
+                AlertDialog.Builder alert = (new AlertDialog.Builder(ListActivity.this));
+                alert.setTitle("Delete Flare Item?");
+                alert.setMessage("Are you sure you want to delete?");
+                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if ((pos <= painPos) && (pos != 0)) {
+                            String posString = String.valueOf(pos-1);
+                            if (mDatabase.child("pain_Nums").child(posString).getKey() != null) {
+                                mDatabase.child("pain_Nums").child(posString).removeValue();
+                                if (mDatabase.child("times").child(posString).getKey() != null) {
+                                    mDatabase.child("times").child(posString).removeValue();
+                                }
+
+                                Toast.makeText(getApplicationContext(), "Pain report removed", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Pain report could not be removed", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else if (pos >= triggerStart) {
+                            Log.d("flareItemDelete", String.valueOf(pos));
+                            if (pos <= (triggerStart+actEnd)) {
+                                int actPos = pos - triggerStart - 1;
+                                Log.d("flareItemDelete", String.valueOf(actPos));
+                                deleteFlareTrigger("actTriggers", String.valueOf(actPos));
+                            } else if (pos < (triggerStart+dietEnd)) {
+                                int dietPos = pos - actEnd - triggerStart - 1;
+                                Log.d("flareItemDelete", String.valueOf(dietPos));
+                                deleteFlareTrigger("dietTriggers", String.valueOf(dietPos));
+                            } else if (pos < triggerStart+miscEnd) {
+                                int miscPos = pos-dietEnd-triggerStart - 1;
+                                Log.d("flareItemDelete", String.valueOf(miscPos));
+                                deleteFlareTrigger("miscTriggers", String.valueOf(miscPos));
+                            }
+
+                        }
+
+                    }
+                });
+                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                alert.show();
+                return true;
+            }
+        });
+    }
+
+    private void deleteFlareTrigger(String trigRef, String trigger) {
+        if (mDatabase.child(trigRef).child(trigger).getKey() != null) {
+            mDatabase.child(trigRef).child(trigger).removeValue();
+            Toast.makeText(getApplicationContext(), "Trigger removed", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "Trigger could not be removed", Toast.LENGTH_LONG).show();
+        }
+    }*/
+
     private List<String> makePainAndTimeDisplay (List<String> list, List<String> pain,
                                           List<String> time) {
         String times = "";
         String painNums = "";
         int pSize = pain.size();
+        int pPos = 0;
         int tSize = time.size();
-        while (!pain.isEmpty() && !time.isEmpty()) {
-            pSize = pSize-1;
-            tSize=tSize-1;
-            times = time.get(tSize);
-            painNums = pain.get(pSize);
-            String tempTime = "Reported pain " + times + painNums;
+        int tPos = 0;
+        while ((pSize > pPos) && (tSize > tPos)) {
+            times = time.get(tPos);
+            painNums = pain.get(pPos);
+            String tempTime = times + "     " + painNums;
             list.add(tempTime);
-            time.remove(tSize);
-            pain.remove(pSize);
+            pPos++;
+            tPos++;
         }
         return list;
     }
     private List<String> makeTriggerDisplay (List<String> list, List<String> child) {
         if (!child.isEmpty()) {
-            int size = child.size() - 1;
-            while (!child.isEmpty()) {
-                String temp = child.get(size);
+            int pos = 0;
+            int size = child.size();
+            while (pos < size) {
+                String temp = child.get(pos);
                 list.add(temp);
-                child.remove(temp);
-                size = size-1;
+                pos++;
             }
         }
         return list;

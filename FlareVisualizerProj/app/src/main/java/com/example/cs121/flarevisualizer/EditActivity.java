@@ -327,22 +327,28 @@ public class EditActivity extends HomeActivity {
                     Iterator<String> trigIter = actTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
-                        entryReferenceActivity.child(temp).child(dbID).setValue(average);
-                        updateTriggerFreq(entryReferenceActivity);
+                        if (temp != null) {
+                            entryReferenceActivity.child(temp).child(dbID).setValue(average);
+                            updateTriggerFreq(entryReferenceActivity);
+                        }
                     }
 
                     trigIter = dietTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
-                        entryReferenceDiet.child(temp).child(dbID).setValue(average);
-                        updateTriggerFreq(entryReferenceDiet);
+                        if (temp != null) {
+                            entryReferenceDiet.child(temp).child(dbID).setValue(average);
+                            updateTriggerFreq(entryReferenceDiet);
+                        }
                     }
 
                     trigIter = miscTrigs.iterator();
                     while (trigIter.hasNext()) {
                         String temp = trigIter.next();
-                        entryReferenceMisc.child(temp).child(dbID).setValue(average);
-                        updateTriggerFreq(entryReferenceMisc);
+                        if (temp != null) {
+                            entryReferenceMisc.child(temp).child(dbID).setValue(average);
+                            updateTriggerFreq(entryReferenceMisc);
+                        }
                     }
                 }
             }
