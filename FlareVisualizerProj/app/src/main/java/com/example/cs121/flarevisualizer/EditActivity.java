@@ -169,11 +169,21 @@ public class EditActivity extends HomeActivity {
                 && (hourValue == 12))){
             hourValue = hourValue+12;
         }
-        String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
-                + monthSpinner.getSelectedItem().toString() + "-"
-                + daySpinner.getSelectedItem().toString() + " "
-                + String.valueOf(hourValue) + ":"
-                +"00:00.00";
+        String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
+        if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0){
+            timeStamp += "0";
+        }
+        timeStamp += monthSpinner.getSelectedItem().toString() + "-";
+        if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
+            timeStamp += "0";
+        }
+        timeStamp += daySpinner.getSelectedItem().toString() + " ";
+        if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
+            timeStamp += "0";
+        }
+        if (hourValue / 10 == 0){
+            timeStamp += "0";
+        }
         Timestamp time = Timestamp.valueOf(timeStamp);
 
         String pain = painRatingSpinner.getSelectedItem().toString();
@@ -267,11 +277,22 @@ public class EditActivity extends HomeActivity {
                             && (hourValue == 12))) {
                         hourValue = hourValue+12;
                     }
-                    String timeStamp = yearSpinner.getSelectedItem().toString() + "-"
-                            + monthSpinner.getSelectedItem().toString() + "-"
-                            + daySpinner.getSelectedItem().toString() + " "
-                            + String.valueOf(hourValue) + ":"
-                            +"00:00.00";
+                    String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
+                    if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0){
+                        timeStamp += "0";
+                    }
+                    timeStamp += monthSpinner.getSelectedItem().toString() + "-";
+                    if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
+                        timeStamp += "0";
+                    }
+                    timeStamp += daySpinner.getSelectedItem().toString() + " ";
+                    if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
+                        timeStamp += "0";
+                    }
+                    if (hourValue / 10 == 0){
+                        timeStamp += "0";
+                    }
+                    timeStamp += String.valueOf(hourValue) + ":" +"00:00.00";
 
                     Timestamp time = Timestamp.valueOf(timeStamp);
 
