@@ -201,19 +201,4 @@ public class MainActivity extends HomeActivity {
     };
 
 
-    // used to debug ListActivity; kept for future reference, but can be removed as desired
-    public void moveToList(View view) {
-        Intent intent = new Intent(this, ListActivity.class);
-
-        intent.putExtra("triggerType", "Activity");
-
-        startActivity(intent);
-    }
-
-    // used to debug EditActivity; kept for future reference, but can be removed as desired
-    public void moveToEdit(View view) {
-        Intent intent = new Intent(this, EditActivity.class);
-        startActivity(intent);
-    }
-
 }
