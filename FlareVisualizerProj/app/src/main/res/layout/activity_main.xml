@@ -1,91 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
 
     tools:context=".MainActivity">
 
-    <LinearLayout
-     android:layout_width="match_parent"
-     android:layout_height="match_parent"
-     android:orientation="vertical">
+    <TextView
+        android:id="@+id/most_recent_flare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/most_recent_flare"
+        android:textSize="24sp"
+        android:background="#89E651" />
 
-        <TextView
-            android:id="@+id/most_recent_flare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/most_recent_flare"
-            android:textSize="24sp"
-            android:background="#89E651" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1" >
+    </com.github.mikephil.charting.charts.LineChart>
 
-        </com.github.mikephil.charting.charts.LineChart>
+    <TextView
+        android:id="@+id/abstract_flares"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/average_flares"
+        android:textSize="24sp"
+        android:background="#F0E61E" />
 
-        <TextView
-            android:id="@+id/abstract_flares"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/abstract_flares"
-            android:textSize="24sp"
-            android:background="#F0E61E" />
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/chart2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <!--
-        <com.github.mikephil.charting.charts.LineChart
-         android:id="@+id/chart3"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_weight="1"/>
-
-
-        <com.github.mikephil.charting.charts.LineChart
-         android:id="@+id/chart4"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_weight="1"/>
-         -->
-    </LinearLayout>
-
-    <!--
-    android:layout_marginTop="?attr/actionBarSize" <<< I removed this from line 7 since it looked awkward
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="3dp"
-            android:layout_marginTop="0dp"
-            android:onClick="moveToList"
-            android:text="List Test" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="129dp"
-            android:layout_marginLeft="129dp"
-            android:layout_marginTop="0dp"
-            android:onClick="moveToEdit"
-            android:text="Edit Test" />
-    -->
-
-
-    </RelativeLayout>
+</LinearLayout>

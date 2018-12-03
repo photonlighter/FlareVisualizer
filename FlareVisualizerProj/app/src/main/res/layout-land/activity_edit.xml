@@ -5,6 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <CheckBox
+        android:id="@+id/endFlare2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:checked="false"
+        android:clickable="true"
+        android:onClick="checkBoxClicked"
+        android:text="End Flare"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+    <Button
+        android:id="@+id/updateFlareBtn2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:onClick="updateInfo"
+        android:text="@string/update_info_submission"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline6" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guideline5"
         android:layout_width="wrap_content"
@@ -29,13 +58,13 @@
         style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
-        android:textSize="16sp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/dateHeader"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -43,8 +72,8 @@
         android:id="@+id/monthDaySlash"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/date_slash"
         android:textSize="16sp"
@@ -56,13 +85,13 @@
         style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
-        android:textSize="16sp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/monthDaySlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -70,8 +99,8 @@
         android:id="@+id/dayYearSlash"
         android:layout_width="8dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/date_slash"
         android:textSize="16sp"
@@ -83,13 +112,13 @@
         style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
-        android:textSize="16sp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/dayYearSlash"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -107,16 +136,16 @@
 
     <Spinner
         android:id="@+id/hourSpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/timeHeader"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -124,8 +153,8 @@
         android:id="@+id/hourText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
         android:text="@string/hour_text"
         android:textSize="16sp"
@@ -142,8 +171,8 @@
         android:layout_marginTop="8dp"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
-        android:textSize="16sp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/painRatingHeader"
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
@@ -161,16 +190,16 @@
 
     <Spinner
         android:id="@+id/painRatingSpinner"
+        style="@style/SpinnerTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
         android:layout_marginTop="8dp"
-        android:textSize="16sp"
-        style="@style/SpinnerTheme"
         android:paddingLeft="4dp"
         android:paddingRight="30dp"
         android:spinnerMode="dropdown"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/hourText"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
@@ -180,14 +209,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
         android:onClick="submitNewInfo"
         android:text="@string/new_info_submission"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline6"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -248,6 +277,13 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.16" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
 
 </android.support.constraint.ConstraintLayout>
