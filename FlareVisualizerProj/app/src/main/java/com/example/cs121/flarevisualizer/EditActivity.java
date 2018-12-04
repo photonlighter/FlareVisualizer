@@ -55,8 +55,6 @@ public class EditActivity extends HomeActivity {
     private Spinner meridiemSpinner;
     private Spinner painRatingSpinner;
 
-    private CheckBox endFlareBox;
-
     private LinearLayout theTriggerLayout;
 
     //database references
@@ -66,8 +64,6 @@ public class EditActivity extends HomeActivity {
     private DatabaseReference entryReferenceActivity;
     private DatabaseReference entryReferenceDiet;
     private DatabaseReference entryReferenceMisc;
-
-    boolean endFlare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +80,6 @@ public class EditActivity extends HomeActivity {
         entryReferenceActivity = mDatabase.getReference().child("Activity");
         entryReferenceDiet = mDatabase.getReference().child("Diet");
         entryReferenceMisc = mDatabase.getReference().child("Misc");
-        endFlare = false;
 
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
@@ -94,8 +89,6 @@ public class EditActivity extends HomeActivity {
         painRatingSpinner = findViewById(R.id.painRatingSpinner);
 
         theTriggerLayout = findViewById(R.id.editTriggerLayout);
-
-        endFlareBox = findViewById(R.id.endFlare);
 
         populateDaysAndYears();
         setSpinners();
@@ -137,15 +130,6 @@ public class EditActivity extends HomeActivity {
         ArrayAdapter<String> painRatingAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, painRating);
         painRatingSpinner.setAdapter(painRatingAdapter);
-    }
-
-    public void checkBoxClicked(View view) {
-        boolean checked = ((CheckBox) view).isChecked();
-        if (view.getId() == R.id.endFlare) {
-            if (checked) {
-                endFlare = true;
-            }
-        }
     }
 
     public void submitNewInfo(View view) {
@@ -388,8 +372,6 @@ public class EditActivity extends HomeActivity {
             }
 
         });
-
-        endFlare = false;
 
         editor.commit();
 
