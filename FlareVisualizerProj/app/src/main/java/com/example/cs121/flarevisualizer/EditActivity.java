@@ -231,7 +231,11 @@ public class EditActivity extends HomeActivity {
         }
 
         //Set the data we've entered into the database
-        flareC.UpdateFlare(pain, time, flare, actTrig, dietTrig, miscTrig);
+        boolean check = true;
+        check = flareC.UpdateFlare(pain, time, flare, actTrig, dietTrig, miscTrig);
+        if (!check) {
+            Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
+        }
         entryReferenceFlare.child(flare).setValue(flareC);
 
         editor.putInt("maxIndex", index);
@@ -239,7 +243,6 @@ public class EditActivity extends HomeActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public void updateInfo(View view) {
@@ -269,7 +272,6 @@ public class EditActivity extends HomeActivity {
                     Toast.makeText(getApplicationContext(), "Error, no flare to update", Toast.LENGTH_LONG);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
-                    finish();
                 } else {
 
                     String hour = hourSpinner.getSelectedItem().toString();
@@ -324,7 +326,11 @@ public class EditActivity extends HomeActivity {
                         }
                     }
 
-                    flareC.UpdateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
+                    boolean check = true;
+                    check = flareC.UpdateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
+                    if (!check) {
+                        Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
+                    }
 
                     List<String> pains = flareC.getPain_Nums();
                     List<String> times = flareC.getTimes();
@@ -389,7 +395,6 @@ public class EditActivity extends HomeActivity {
 
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        finish();
     }
 
     public List<String> getStartAndEnd(List<String> times){
