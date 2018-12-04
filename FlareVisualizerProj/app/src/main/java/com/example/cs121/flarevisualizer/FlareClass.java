@@ -88,8 +88,11 @@ public class FlareClass {
 
     public void UpdateFlare (String painNum, Timestamp time, String dbID, List<String> actTriggers,
                              List<String> dietTriggers, List<String> miscTriggers){
+        boolean timeAfter = addTime(time);
+        if (!timeAfter) {
+            return;
+        }
         addPain_Nums(painNum);
-        addTime(time);
         dbId = dbID;
         setTrigList(this.actTriggers, actTriggers);
         setTrigList(this.dietTriggers, dietTriggers);
@@ -107,7 +110,8 @@ public class FlareClass {
         pain_Nums.add(pain);
     }
 
-    public void addTime (Timestamp time) {
+    public boolean addTime (Timestamp time) {
+        boolean timeAfter = false;
         if (times.size() > 0) {
             Iterator<String> iter = times.iterator();
             String temp;
@@ -121,10 +125,13 @@ public class FlareClass {
             Timestamp currT = Timestamp.valueOf(currTime);
             if (currT.before(time)) {
                 times.add(time.toString());
+                timeAfter = true;
             }
         } else {
             times.add(time.toString());
+            timeAfter = true;
         }
+        return true;
     }
     public List<String> getPain_Nums () {
         if (pain_Nums != null)

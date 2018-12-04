@@ -140,7 +140,7 @@ public class ListActivity extends HomeActivity {
         }
 
         if (!flareDisplay) {
-            mDatabase.addValueEventListener(new ValueEventListener() {
+            mDatabase.orderByChild("freq").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     showData(dataSnapshot);
