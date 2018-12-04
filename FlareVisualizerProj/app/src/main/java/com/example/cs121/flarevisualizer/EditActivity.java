@@ -185,6 +185,7 @@ public class EditActivity extends HomeActivity {
             timeStamp += "0";
         }
         timeStamp += String.valueOf(hourValue) + ":" +"00:00.00";
+
         Timestamp time = Timestamp.valueOf(timeStamp);
 
         String pain = painRatingSpinner.getSelectedItem().toString();
