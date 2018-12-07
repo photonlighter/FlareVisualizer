@@ -37,6 +37,7 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        // if the sidebar is open when the back button is pressed, close the sidebar
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -60,22 +61,13 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_diet) {
             // Go to diet activity
-            // from Sammy's code in MainActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Diet");
             startActivity(intent);
             drawer.closeDrawers();
 
-            // test data from Sammy, may be deleted in the future
-            /*String[] testData = new String[4];
-            for (int i =0; i < 4; ++i){
-                testData[i] = "a" + i;
-            }*/
-            //intent.putExtra("data", testData);
-
         } else if (id == R.id.nav_activity) {
             // Go to exercise activity
-            // from Sammy's code in MainActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Activity");
             startActivity(intent);
@@ -83,7 +75,6 @@ public class HomeActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_misc_triggers) {
             // Go to miscellaneous triggers activity
-            // from Sammy's code in MainActivity
             Intent intent = new Intent(this, ListActivity.class);
             intent.putExtra("triggerType", "Miscellany");
             startActivity(intent);

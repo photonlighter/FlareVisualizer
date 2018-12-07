@@ -53,7 +53,7 @@ public class MainActivity extends HomeActivity {
         setupAbstractData();
     }
 
-
+    // setup for the current flare's graph
     private void setupFlareData() {
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
         int index = pref.getInt("maxIndex", -1);
@@ -77,7 +77,7 @@ public class MainActivity extends HomeActivity {
         });
     }
 
-
+    // setup for the averages graph
     private void setupAbstractData() {
         abstractDatabase = FirebaseDatabase.getInstance().getReference("Abstract");
 
@@ -94,7 +94,7 @@ public class MainActivity extends HomeActivity {
         });
     }
 
-
+    // gets data for current flare's graph
     private void getFlareData(DataSnapshot dataSnapshot) {
         Float xNumber;
 
@@ -119,6 +119,7 @@ public class MainActivity extends HomeActivity {
         setupChart(mCharts[0], flareData, mColors[0]);
     }
 
+    // gets data for the averages graph
     private void getAbstractData(DataSnapshot dataSnapshot) {
         Float avgPain = Float.valueOf(0);
         int counter = 0;
@@ -136,7 +137,7 @@ public class MainActivity extends HomeActivity {
 
     }
 
-
+    // creates the general properties of a chart
     private LineData setChartProperties(ArrayList<Entry> yVals) {
         LineDataSet set1 = new LineDataSet(yVals, "Data Set");
 
@@ -197,7 +198,10 @@ public class MainActivity extends HomeActivity {
 
     //colors used for the backgrounds of each graph
     private int[] mColors = new int[]{
-            Color.rgb(137, 230, 81), Color.rgb(240, 230, 30), Color.rgb(89, 199, 250), Color.rgb(250, 104, 119)
+            Color.rgb(137, 230, 81),
+            Color.rgb(240, 230, 30),
+            Color.rgb(89, 199, 250),
+            Color.rgb(250, 104, 119)
     };
 
 

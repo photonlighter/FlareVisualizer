@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -69,21 +70,25 @@ public class ListActivity extends HomeActivity {
             // get trigger data that will be displayed in list; should be pre-formatted
             switch (triggerType) {
                 case "Diet":
+                    // diet list
                     mDatabase = FirebaseDatabase.getInstance().getReference("Diet");
                     triggerLongClick();
                     triggerShortClick();
                     break;
                 case "Activity":
+                    // activity list
                     mDatabase = FirebaseDatabase.getInstance().getReference("Activity");
                     triggerLongClick();
                     triggerShortClick();
                     break;
                 case "Miscellany":
+                    // miscellany list
                     mDatabase = FirebaseDatabase.getInstance().getReference("Misc");
                     triggerLongClick();
                     triggerShortClick();
                     break;
                 case "Flares":
+                    // flare list
                     mDatabase = FirebaseDatabase.getInstance().getReference("Flares");
                     flareDatabase = FirebaseDatabase.getInstance().getReference("Abstract");
                     triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -169,6 +174,8 @@ public class ListActivity extends HomeActivity {
         header.setText(getString(R.string.trigger_list, triggerType));
 
     }
+
+    // let you update the selected list item with a short click
     private void triggerShortClick() {
         triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -179,6 +186,7 @@ public class ListActivity extends HomeActivity {
         });
     }
 
+    // lets you delete the selected list item with a long click
     private void triggerLongClick() {
         triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -212,6 +220,8 @@ public class ListActivity extends HomeActivity {
         });
     }
 
+    // lets you edit the selected item in the list
+    // if so desired, changes can be canceled before saving
     private void showUpdateDialog(final String triggerName, final String triggerType) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -251,7 +261,6 @@ public class ListActivity extends HomeActivity {
         });
     }
 
-    // Taken from https://www.youtube.com/watch?v=2bYWf0z8_8s
     private boolean updateTrigger(String triggerName, String triggerType, String newTriggerName) {
         switch (triggerType) {
             case "Diet":
@@ -347,77 +356,7 @@ public class ListActivity extends HomeActivity {
         triggerList.setAdapter(adapter);
     }
 
-    /*private void setFlareLongClick() {
-        triggerList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                final String item = (String) adapterView.getItemAtPosition(i);
-                if (item.equals("TRIGGERS") | item.equals("PAIN REPORTS")) {
-                    return false;
-                }
-                final int pos = i;
-                AlertDialog.Builder alert = (new AlertDialog.Builder(ListActivity.this));
-                alert.setTitle("Delete Flare Item?");
-                alert.setMessage("Are you sure you want to delete?");
-                alert.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if ((pos <= painPos) && (pos != 0)) {
-                            String posString = String.valueOf(pos-1);
-                            if (mDatabase.child("pain_Nums").child(posString).getKey() != null) {
-                                mDatabase.child("pain_Nums").child(posString).removeValue();
-                                if (mDatabase.child("times").child(posString).getKey() != null) {
-                                    mDatabase.child("times").child(posString).removeValue();
-                                }
-
-                                Toast.makeText(getApplicationContext(), "Pain report removed", Toast.LENGTH_LONG).show();
-                            } else {
-                                Toast.makeText(getApplicationContext(), "Pain report could not be removed", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        else if (pos >= triggerStart) {
-                            Log.d("flareItemDelete", String.valueOf(pos));
-                            if (pos <= (triggerStart+actEnd)) {
-                                int actPos = pos - triggerStart - 1;
-                                Log.d("flareItemDelete", String.valueOf(actPos));
-                                deleteFlareTrigger("actTriggers", String.valueOf(actPos));
-                            } else if (pos < (triggerStart+dietEnd)) {
-                                int dietPos = pos - actEnd - triggerStart - 1;
-                                Log.d("flareItemDelete", String.valueOf(dietPos));
-                                deleteFlareTrigger("dietTriggers", String.valueOf(dietPos));
-                            } else if (pos < triggerStart+miscEnd) {
-                                int miscPos = pos-dietEnd-triggerStart - 1;
-                                Log.d("flareItemDelete", String.valueOf(miscPos));
-                                deleteFlareTrigger("miscTriggers", String.valueOf(miscPos));
-                            }
-
-                        }
-
-                    }
-                });
-                alert.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(getApplicationContext(), "Cancelled", Toast.LENGTH_LONG).show();
-                        dialogInterface.dismiss();
-                    }
-                });
-
-                alert.show();
-                return true;
-            }
-        });
-    }
-
-    private void deleteFlareTrigger(String trigRef, String trigger) {
-        if (mDatabase.child(trigRef).child(trigger).getKey() != null) {
-            mDatabase.child(trigRef).child(trigger).removeValue();
-            Toast.makeText(getApplicationContext(), "Trigger removed", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getApplicationContext(), "Trigger could not be removed", Toast.LENGTH_LONG).show();
-        }
-    }*/
-
+    // pairs up the times with the pair numbers
     private List<String> makePainAndTimeDisplay (List<String> list, List<String> pain,
                                           List<String> time) {
         String times = "";
@@ -436,6 +375,7 @@ public class ListActivity extends HomeActivity {
         }
         return list;
     }
+
     private List<String> makeTriggerDisplay (List<String> list, List<String> child) {
         if (!child.isEmpty()) {
             int pos = 0;

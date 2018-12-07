@@ -30,15 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-/*
- *  To do: Add an update flare and end flare button. On updating, retrieve the database object, update
- *  it with new info, and push it back.
- *  Ending requires no new info. On ending a flare, the most recent flare will be retrieved and we'll
- *  calculate the average pain and get the length of the flare. Both of these numbers, along with the
- *  start and end times will be stored in a general flare object and will be pushed to a database
- *  reference of that object type.
- *
- */
 public class EditActivity extends HomeActivity {
 
     private String[] months = {"M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
@@ -81,6 +72,7 @@ public class EditActivity extends HomeActivity {
         entryReferenceDiet = mDatabase.getReference().child("Diet");
         entryReferenceMisc = mDatabase.getReference().child("Misc");
 
+        // get spinners
         monthSpinner = findViewById(R.id.monthSpinner);
         daySpinner = findViewById(R.id.daySpinner);
         yearSpinner = findViewById(R.id.yearSpinner);
@@ -94,6 +86,7 @@ public class EditActivity extends HomeActivity {
         setSpinners();
     }
 
+    // populates the day and year arrays
     private void populateDaysAndYears() {
         days[0] = "D";
         for (int index = 1; index <= 31; ++index){
@@ -106,6 +99,7 @@ public class EditActivity extends HomeActivity {
         }
     }
 
+    // puts the correct data in the corresponding spinner
     private void setSpinners() {
         ArrayAdapter<String> monthAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, months);
@@ -132,6 +126,7 @@ public class EditActivity extends HomeActivity {
         painRatingSpinner.setAdapter(painRatingAdapter);
     }
 
+    // adds a new flare to the database
     public void submitNewInfo(View view) {
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
@@ -146,6 +141,7 @@ public class EditActivity extends HomeActivity {
             toast.show();
             return;
         }
+        //converts the hours into military time
         String hour = hourSpinner.getSelectedItem().toString();
         int hourValue = Integer.valueOf(hour);
         if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
@@ -153,6 +149,8 @@ public class EditActivity extends HomeActivity {
                 && (hourValue == 12))){
             hourValue = hourValue+12;
         }
+
+        // creates the timestamp
         String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
         if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0){
             timeStamp += "0";
@@ -182,6 +180,7 @@ public class EditActivity extends HomeActivity {
         int index = pref.getInt("maxIndex", -1) + 1;
         String flare = "flare" + index;
 
+        // gets the suspected triggers
         for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
             View row = theTriggerLayout.getChildAt(i);
             Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
@@ -229,6 +228,7 @@ public class EditActivity extends HomeActivity {
         startActivity(intent);
     }
 
+    // adds onto the current flare
     public void updateInfo(View view) {
 
         SharedPreferences pref = getSharedPreferences("ProjectPref", MODE_PRIVATE);
@@ -257,7 +257,7 @@ public class EditActivity extends HomeActivity {
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
                 } else {
-
+                    // turns the hours into military time
                     String hour = hourSpinner.getSelectedItem().toString();
                     int hourValue = Integer.valueOf(hour);
                     if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
@@ -265,6 +265,8 @@ public class EditActivity extends HomeActivity {
                             && (hourValue == 12))) {
                         hourValue = hourValue+12;
                     }
+
+                    //create the timestamp
                     String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
                     if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0){
                         timeStamp += "0";
@@ -289,6 +291,7 @@ public class EditActivity extends HomeActivity {
                     List<String> dietTrig = new ArrayList<>();
                     List<String> miscTrig = new ArrayList<>();
 
+                    // gets the suspected triggers
                     for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
                         View row = theTriggerLayout.getChildAt(i);
                         Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
@@ -379,6 +382,7 @@ public class EditActivity extends HomeActivity {
         startActivity(intent);
     }
 
+    // gets the first and last entry in the list
     public List<String> getStartAndEnd(List<String> times){
         String temp = "";
         List<String> result = new ArrayList<>();
@@ -391,6 +395,7 @@ public class EditActivity extends HomeActivity {
         return result;
     }
 
+    // gets the average pain in the list
     public int getPainAvg (List<String> pain_nums) {
         int avg = 0;
         if (pain_nums != null) {
