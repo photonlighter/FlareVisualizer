@@ -1,12 +1,10 @@
 package com.example.cs121.flarevisualizer;
 
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.charts.LineChart;

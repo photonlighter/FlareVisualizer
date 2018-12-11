@@ -1,18 +1,11 @@
 package com.example.cs121.flarevisualizer;
 
-import android.util.Log;
 
-import com.google.firebase.database.Exclude;
-
-import java.io.Serializable;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+
 
 class FlareDatabaseAbstract {
     private String start;
@@ -86,7 +79,7 @@ public class FlareClass {
         dbId = "";
     }
 
-    public boolean UpdateFlare (String painNum, Timestamp time, String dbID, List<String> actTriggers,
+    public boolean updateFlare(String painNum, Timestamp time, String dbID, List<String> actTriggers,
                              List<String> dietTriggers, List<String> miscTriggers){
         boolean timeAfter = addTime(time);
         if (!timeAfter) {

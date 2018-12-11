@@ -5,19 +5,16 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -215,7 +212,7 @@ public class EditActivity extends HomeActivity {
 
         //Set the data we've entered into the database
         boolean check = true;
-        check = flareC.UpdateFlare(pain, time, flare, actTrig, dietTrig, miscTrig);
+        check = flareC.updateFlare(pain, time, flare, actTrig, dietTrig, miscTrig);
         if (!check) {
             Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
         }
@@ -314,7 +311,7 @@ public class EditActivity extends HomeActivity {
                     }
 
                     boolean check = true;
-                    check = flareC.UpdateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
+                    check = flareC.updateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
                     if (!check) {
                         Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
                     }
