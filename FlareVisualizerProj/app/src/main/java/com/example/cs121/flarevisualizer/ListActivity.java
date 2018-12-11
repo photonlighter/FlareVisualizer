@@ -59,6 +59,7 @@ public class ListActivity extends HomeActivity {
         triggerList = (ListView) findViewById(R.id.triggerList);
 
         boolean flareDisplay = false;
+        boolean flare = false;
         // fetch extras from the intent
         if (extras != null) {
             // type of trigger data that is being displayed; used for header
@@ -89,6 +90,7 @@ public class ListActivity extends HomeActivity {
                     // flare list
                     mDatabase = FirebaseDatabase.getInstance().getReference("Flares");
                     flareDatabase = FirebaseDatabase.getInstance().getReference("Abstract");
+                    flare = true;
                     triggerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -143,17 +145,31 @@ public class ListActivity extends HomeActivity {
         }
 
         if (!flareDisplay) {
-            mDatabase.orderByChild("freq").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    showData(dataSnapshot);
-                }
+            if (!flare) {
+                mDatabase.orderByChild("freq").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        showData(dataSnapshot);
+                    }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
+                    }
+                });
+            } else {
+                mDatabase.orderByChild("dbId").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        showData(dataSnapshot);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
         } else {
             mDatabase.addValueEventListener(new ValueEventListener() {
                 @Override

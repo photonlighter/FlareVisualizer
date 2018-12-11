@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.FrameLayout;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -57,12 +58,12 @@ public class MainActivity extends HomeActivity {
         int index = pref.getInt("maxIndex", -1);
         String flare = "flare" + index;
 
-        flareDatabase = FirebaseDatabase.getInstance().getReference();
+        flareDatabase = FirebaseDatabase.getInstance().getReference("Flares");
 
         //Get most recent Flares record
         //Query recentRecord = flareDatabase.child("Flares").orderByKey().limitToLast(1);
 
-        flareDatabase.child("Flares").child(flare).addListenerForSingleValueEvent(new ValueEventListener() {
+        flareDatabase.orderByChild("dbId").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 getFlareData(dataSnapshot);
@@ -95,24 +96,27 @@ public class MainActivity extends HomeActivity {
     // gets data for current flare's graph
     private void getFlareData(DataSnapshot dataSnapshot) {
         Float xNumber;
-
         //DataSnapshot data = dataSnapshot.child("pain_Nums");
-        FlareClass currFlare = dataSnapshot.getValue(FlareClass.class);
-        if (currFlare == null) {
-            return;
-        }
-        List<String>  painNums = currFlare.getPain_Nums();
-        int counter = 0;
-        Iterator<String> iter = painNums.iterator();
-        while (iter.hasNext()) {
-            String temp = iter.next();
-            if (temp != null) {
-                xNumber = Float.parseFloat(temp);
-                yVals.add(new Entry(counter, xNumber));
-                counter++;
+        if (dataSnapshot != null) {
+            for (DataSnapshot data : dataSnapshot.getChildren()) {
+                FlareClass currFlare = data.getValue(FlareClass.class);
+                if (currFlare == null) {
+                    return;
+                }
+                List<String> painNums = currFlare.getPain_Nums();
+                int counter = 0;
+                Iterator<String> iter = painNums.iterator();
+                while (iter.hasNext()) {
+                    String temp = iter.next();
+                    Log.d("graph: ", temp);
+                    if (temp != null) {
+                        xNumber = Float.parseFloat(temp);
+                        yVals.add(new Entry(counter, xNumber));
+                        counter++;
+                    }
+                }
             }
         }
-
         LineData flareData = setChartProperties(yVals);
         setupChart(mCharts[0], flareData, mColors[0]);
     }
@@ -122,14 +126,14 @@ public class MainActivity extends HomeActivity {
         Float avgPain = Float.valueOf(0);
         int counter = 0;
         DataSnapshot data;
-
-        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-            data = ds.child("avg_pain");
-            avgPain = data.getValue(Float.class);
-            yValsAbstract.add(new Entry(counter, avgPain));
-            counter++;
+        if (dataSnapshot != null) {
+            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                data = ds.child("avg_pain");
+                avgPain = data.getValue(Float.class);
+                yValsAbstract.add(new Entry(counter, avgPain));
+                counter++;
+            }
         }
-
         LineData abstractData = setChartProperties(yValsAbstract);
         setupChart(mCharts[1], abstractData, mColors[1]);
 

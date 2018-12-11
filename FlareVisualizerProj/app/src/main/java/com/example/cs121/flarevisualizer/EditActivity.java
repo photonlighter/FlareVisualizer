@@ -211,7 +211,7 @@ public class EditActivity extends HomeActivity {
         }
 
         //Set the data we've entered into the database
-        boolean check = true;
+        boolean check;
         check = flareC.updateFlare(pain, time, flare, actTrig, dietTrig, miscTrig);
         if (!check) {
             Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
@@ -242,125 +242,129 @@ public class EditActivity extends HomeActivity {
             return;
         }
 
-        int index = pref.getInt("maxIndex", -1);
-        final String flareN = "flare" + index;
-        entryReferenceFlare.child(flareN).addListenerForSingleValueEvent(new ValueEventListener() {
+        //int index = pref.getInt("maxIndex", -1);
+        //final String flareN = "flare" + index;
+        entryReferenceFlare.orderByChild("dbId").limitToLast(1).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                FlareClass flareC = dataSnapshot.getValue(FlareClass.class);
-                if (flareC == null) {
-                    Toast.makeText(getApplicationContext(), "Error, no flare to update", Toast.LENGTH_LONG);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                } else {
-                    // turns the hours into military time
-                    String hour = hourSpinner.getSelectedItem().toString();
-                    int hourValue = Integer.valueOf(hour);
-                    if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
-                            && (hourValue != 12))  | ((meridiemSpinner.getSelectedItem().toString() == "A.M.")
-                            && (hourValue == 12))) {
-                        hourValue = hourValue+12;
-                    }
-
-                    //create the timestamp
-                    String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
-                    if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0){
-                        timeStamp += "0";
-                    }
-                    timeStamp += monthSpinner.getSelectedItem().toString() + "-";
-                    if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
-                        timeStamp += "0";
-                    }
-                    timeStamp += daySpinner.getSelectedItem().toString() + " ";
-                    if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0){
-                        timeStamp += "0";
-                    }
-                    if (hourValue / 10 == 0){
-                        timeStamp += "0";
-                    }
-                    timeStamp += String.valueOf(hourValue) + ":" +"00:00.00";
-
-                    Timestamp time = Timestamp.valueOf(timeStamp);
-
-                    String pain = painRatingSpinner.getSelectedItem().toString();
-                    List<String> actTrig = new ArrayList<>();
-                    List<String> dietTrig = new ArrayList<>();
-                    List<String> miscTrig = new ArrayList<>();
-
-                    // gets the suspected triggers
-                    for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
-                        View row = theTriggerLayout.getChildAt(i);
-                        Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
-                        EditText rowEdit = row.findViewById(R.id.triggerName);
-
-                        String rowType = rowSpinner.getSelectedItem().toString();
-                        String rowName = rowEdit.getText().toString().trim();
-
-                        if (!rowName.matches("")) {
-                            //get trigger strings to add to the flare objects
-
-                            if (rowType.equals("Act.")) {
-                                actTrig.add(rowName);
-                            } else if (rowType.equals("Diet")) {
-                                dietTrig.add(rowName);
-                            } else {
-                                miscTrig.add(rowName);
+                if (dataSnapshot != null) {
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        FlareClass flareC = data.getValue(FlareClass.class);
+                        if (flareC == null) {
+                            Toast.makeText(getApplicationContext(), "Error, no flare to update", Toast.LENGTH_LONG);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                            // turns the hours into military time
+                            String flareN = flareC.getDbId();
+                            String hour = hourSpinner.getSelectedItem().toString();
+                            int hourValue = Integer.valueOf(hour);
+                            if (((meridiemSpinner.getSelectedItem().toString() == "P.M.")
+                                    && (hourValue != 12)) | ((meridiemSpinner.getSelectedItem().toString() == "A.M.")
+                                    && (hourValue == 12))) {
+                                hourValue = hourValue + 12;
                             }
-                        }
-                    }
 
-                    boolean check = true;
-                    check = flareC.updateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
-                    if (!check) {
-                        Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
-                    }
+                            //create the timestamp
+                            String timeStamp = yearSpinner.getSelectedItem().toString() + "-";
+                            if (Integer.parseInt(monthSpinner.getSelectedItem().toString()) / 10 == 0) {
+                                timeStamp += "0";
+                            }
+                            timeStamp += monthSpinner.getSelectedItem().toString() + "-";
+                            if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0) {
+                                timeStamp += "0";
+                            }
+                            timeStamp += daySpinner.getSelectedItem().toString() + " ";
+                            if (Integer.parseInt(daySpinner.getSelectedItem().toString()) / 10 == 0) {
+                                timeStamp += "0";
+                            }
+                            if (hourValue / 10 == 0) {
+                                timeStamp += "0";
+                            }
+                            timeStamp += String.valueOf(hourValue) + ":" + "00:00.00";
 
-                    List<String> pains = flareC.getPain_Nums();
-                    List<String> times = flareC.getTimes();
-                    List<String> actTrigs = flareC.getActTriggers();
-                    List<String> dietTrigs = flareC.getDietTriggers();
-                    List<String> miscTrigs = flareC.getMiscTriggers();
+                            Timestamp time = Timestamp.valueOf(timeStamp);
 
-                    DatabaseReference flareReference = dataSnapshot.getRef();
-                    flareReference.setValue(flareC);
+                            String pain = painRatingSpinner.getSelectedItem().toString();
+                            List<String> actTrig = new ArrayList<>();
+                            List<String> dietTrig = new ArrayList<>();
+                            List<String> miscTrig = new ArrayList<>();
+
+                            // gets the suspected triggers
+                            for (int i = 0; i < theTriggerLayout.getChildCount(); ++i) {
+                                View row = theTriggerLayout.getChildAt(i);
+                                Spinner rowSpinner = row.findViewById(R.id.triggerSpinner);
+                                EditText rowEdit = row.findViewById(R.id.triggerName);
+
+                                String rowType = rowSpinner.getSelectedItem().toString();
+                                String rowName = rowEdit.getText().toString().trim();
+
+                                if (!rowName.matches("")) {
+                                    //get trigger strings to add to the flare objects
+
+                                    if (rowType.equals("Act.")) {
+                                        actTrig.add(rowName);
+                                    } else if (rowType.equals("Diet")) {
+                                        dietTrig.add(rowName);
+                                    } else {
+                                        miscTrig.add(rowName);
+                                    }
+                                }
+                            }
+
+                            boolean check = true;
+                            check = flareC.updateFlare(pain, time, flareN, actTrig, dietTrig, miscTrig);
+                            if (!check) {
+                                Toast.makeText(getApplicationContext(), "Error inserting pain report", Toast.LENGTH_LONG).show();
+                            }
+
+                            List<String> pains = flareC.getPain_Nums();
+                            List<String> times = flareC.getTimes();
+                            List<String> actTrigs = flareC.getActTriggers();
+                            List<String> dietTrigs = flareC.getDietTriggers();
+                            List<String> miscTrigs = flareC.getMiscTriggers();
+
+                            DatabaseReference flareReference = data.getRef();
+                            flareReference.setValue(flareC);
 
 
-                    String dbID = flareC.getDbId();
-                    int average = getPainAvg(pains);
-                    List<String> startAndEnd = getStartAndEnd(times);
-                    FlareDatabaseAbstract abstractFlare = new FlareDatabaseAbstract();
-                    abstractFlare.setAvg_pain(average);
-                    abstractFlare.setStartTime(startAndEnd.get(0));
-                    abstractFlare.setEndTime(startAndEnd.get(1));
-                    abstractFlare.setDbId(dbID);
-                    entryReferenceGeneral.child(dbID).setValue(abstractFlare);
+                            String dbID = flareC.getDbId();
+                            int average = getPainAvg(pains);
+                            List<String> startAndEnd = getStartAndEnd(times);
+                            FlareDatabaseAbstract abstractFlare = new FlareDatabaseAbstract();
+                            abstractFlare.setAvg_pain(average);
+                            abstractFlare.setStartTime(startAndEnd.get(0));
+                            abstractFlare.setEndTime(startAndEnd.get(1));
+                            abstractFlare.setDbId(dbID);
+                            entryReferenceGeneral.child(dbID).setValue(abstractFlare);
 
-                    //Set the list frequencies
-                    Iterator<String> trigIter = actTrigs.iterator();
-                    while (trigIter.hasNext()) {
-                        String temp = trigIter.next();
-                        if (temp != null) {
-                            entryReferenceActivity.child(temp).child(dbID).setValue(average);
-                            updateTriggerFreq(entryReferenceActivity);
-                        }
-                    }
+                            //Set the list frequencies
+                            Iterator<String> trigIter = actTrigs.iterator();
+                            while (trigIter.hasNext()) {
+                                String temp = trigIter.next();
+                                if (temp != null) {
+                                    entryReferenceActivity.child(temp).child(dbID).setValue(average);
+                                    updateTriggerFreq(entryReferenceActivity);
+                                }
+                            }
 
-                    trigIter = dietTrigs.iterator();
-                    while (trigIter.hasNext()) {
-                        String temp = trigIter.next();
-                        if (temp != null) {
-                            entryReferenceDiet.child(temp).child(dbID).setValue(average);
-                            updateTriggerFreq(entryReferenceDiet);
-                        }
-                    }
+                            trigIter = dietTrigs.iterator();
+                            while (trigIter.hasNext()) {
+                                String temp = trigIter.next();
+                                if (temp != null) {
+                                    entryReferenceDiet.child(temp).child(dbID).setValue(average);
+                                    updateTriggerFreq(entryReferenceDiet);
+                                }
+                            }
 
-                    trigIter = miscTrigs.iterator();
-                    while (trigIter.hasNext()) {
-                        String temp = trigIter.next();
-                        if (temp != null) {
-                            entryReferenceMisc.child(temp).child(dbID).setValue(average);
-                            updateTriggerFreq(entryReferenceMisc);
+                            trigIter = miscTrigs.iterator();
+                            while (trigIter.hasNext()) {
+                                String temp = trigIter.next();
+                                if (temp != null) {
+                                    entryReferenceMisc.child(temp).child(dbID).setValue(average);
+                                    updateTriggerFreq(entryReferenceMisc);
+                                }
+                            }
                         }
                     }
                 }
